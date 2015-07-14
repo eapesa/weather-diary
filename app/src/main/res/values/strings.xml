@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">WeatherDiary</string>
+    <string name="google_maps_key">AIzaSyCz07ej4cSX_sKgwny9WH5tPKS9F2F1ZzQ</string>
+    <integer name="google_play_services_version">7327000</integer>
 
     <string name="title_section1">Home</string>
     <string name="title_section2">Get Forecast</string>

@@ -1,43 +1,36 @@
 package android_project.voyager.com.weatherdiary;
 
 import android.app.Activity;
-
-import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
+import android.content.SharedPreferences;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import android_project.voyager.com.weatherdiary.fragments.ForecastDiaryFragment;
 import android_project.voyager.com.weatherdiary.fragments.GetForecastFragment;
 import android_project.voyager.com.weatherdiary.fragments.HomeFragment;
+import android_project.voyager.com.weatherdiary.utils.Constants;
 
 
-public class MainActivity extends Activity
+public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private NavigationDrawerFragment mNavigationDrawerFragment;
-    private CharSequence mTitle;
+    private SharedPreferences mSharedPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mSharedPrefs = getPreferences(Context.MODE_PRIVATE);
+
         mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
@@ -47,7 +40,7 @@ public class MainActivity extends Activity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         switch (position) {
             case 1:
                 fragmentManager.beginTransaction()
@@ -61,7 +54,7 @@ public class MainActivity extends Activity
                 break;
             default:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, HomeFragment.newInstance(position))
+                        .replace(R.id.container, HomeFragment.newInstance())
                         .commit();
         }
     }
@@ -77,10 +70,4 @@ public class MainActivity extends Activity
         return super.onOptionsItemSelected(item);
     }
 
-//    public void restoreActionBar() {
-//        ActionBar actionBar = getActionBar();
-//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-//        actionBar.setDisplayShowTitleEnabled(true);
-//        actionBar.setTitle(mTitle);
-//    }
 }
