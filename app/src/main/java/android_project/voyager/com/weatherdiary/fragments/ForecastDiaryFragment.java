@@ -12,18 +12,16 @@ import android_project.voyager.com.weatherdiary.R;
 /**
  * Created by eapesa on 7/13/15.
  */
-public class HomeFragment extends Fragment {
-
-    public static HomeFragment newInstance(int sectionNumber) {
-        HomeFragment fragment = new HomeFragment();
+public class ForecastDiaryFragment extends Fragment {
+    public static ForecastDiaryFragment newInstance(int sectionNumber) {
+        ForecastDiaryFragment fragment = new ForecastDiaryFragment();
         return fragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        return super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.weatherdiary_home_activity, container, false);
+        View rootView = inflater.inflate(R.layout.weatherdiary_forecastdiary_fragment, container, false);
         return rootView;
     }
 }

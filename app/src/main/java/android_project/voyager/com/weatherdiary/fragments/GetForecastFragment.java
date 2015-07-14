@@ -22,8 +22,7 @@ public class GetForecastFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        return super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.weatherdiary_getforecast_activity, container, false);
+        View rootView = inflater.inflate(R.layout.weatherdiary_getforecast_fragment, container, false);
         return rootView;
     }
 }
