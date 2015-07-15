@@ -6,6 +6,9 @@ package android_project.voyager.com.weatherdiary.utils;
 public class Constants {
     public static final String WEATHER_API = "http://api.openweathermap.org/data/2.5/weather";
 
+    public static final String CELSIUS_UNIT = "°C";
+    public static final String FAHRENHEIT_UNIT = "°F";
+
     public static final String CURRENT_LAT_LABEL = "current_lat";
     public static final String CURRENT_LONG_LABEL = "current_long";
     public static final String CURRENT_PLACENAME_LABEL = "place_name";

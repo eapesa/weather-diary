@@ -1,6 +1,7 @@
 package android_project.voyager.com.weatherdiary.fragments;
 
 //import android.app.Fragment;
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
@@ -67,6 +68,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
         return fragment;
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.mContext = activity;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,7 +96,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
         mProgressDialogUpdate = new ProgressDialog(this.getActivity());
         mProgressDialogUpdate.setMessage(Labels.HOME_UPDATE_FORECAST);
 
-        mContext = rootView.getContext();
+//        mContext = rootView.getContext();
         mSharedPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
         mSharedPrefsEditor = mSharedPrefs.edit();
 
@@ -148,7 +155,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
         }
         Log.d(TAG, "Getting coordinates... LAT: " + latitude + " LON: " + longitude);
 
-        if (Utilities.checkNetworkConnection(getActivity())) {
+        Log.d("HELLO", "### getActivity is "+mContext);
+        if (Utilities.checkNetworkConnection(mContext)) {
             getWeatherForecast(latitude, longitude);
         } else {
             Toast.makeText(getActivity(), Toasts.NO_NETWORK, Toast.LENGTH_SHORT).show();
@@ -252,13 +260,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
         mTextViewPlaceName.setText(namePlace);
 
         int mainTempKelvin = mainJson.getJSONObject("main").getInt("temp");
-        mTextViewCelsius.setText( Utilities.kelvinToCelsius(mainTempKelvin) + "C" );
-        mTextViewFahrenheit.setText( Utilities.kelvinToFahrenheit(mainTempKelvin) + "F" );
+        mTextViewCelsius.setText( Utilities.kelvinToCelsius(mainTempKelvin)
+                + Constants.CELSIUS_UNIT );
+        mTextViewFahrenheit.setText( Utilities.kelvinToFahrenheit(mainTempKelvin)
+                + Constants.FAHRENHEIT_UNIT );
 
         String cloudiness = mainJson.getJSONArray("weather").getJSONObject(0).getString("description");
         mTextViewCloudiness.setText(cloudiness);
 
-        double wind = mainJson.getJSONObject("wind").getInt("speed");
+        double wind = mainJson.getJSONObject("wind").getDouble("speed");
         mTextViewWind.setText( String.valueOf(wind) + "m/s");
     }
 }
