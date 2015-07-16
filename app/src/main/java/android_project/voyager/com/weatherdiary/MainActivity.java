@@ -170,17 +170,11 @@ public class MainActivity extends AppCompatActivity
         mSharedPrefsEditor.commit();
         mSharedPrefsEditor.putString(Constants.ARGS_LONGITUDE,
                 String.valueOf(mCurrentLocation.getLongitude()));
-        mSharedPrefsEditor.commit();
         mSharedPrefsEditor.putString(Constants.ARGS_PLACENAME, weather.nameOfPlace);
-        mSharedPrefsEditor.commit();
         mSharedPrefsEditor.putString(Constants.ARGS_CELSIUS, weather.celsiusTemp);
-        mSharedPrefsEditor.commit();
         mSharedPrefsEditor.putString(Constants.ARGS_FAHRENHEIT, weather.fahrenheitTemp);
-        mSharedPrefsEditor.commit();
         mSharedPrefsEditor.putString(Constants.ARGS_CLOUDINESS, weather.cloudiness);
-        mSharedPrefsEditor.commit();
         mSharedPrefsEditor.putString(Constants.ARGS_WINDSPEED, weather.windSpeed);
-        mSharedPrefsEditor.commit();
         mSharedPrefsEditor.putString(Constants.ARGS_FORECAST_TIME, weather.forecastTime);
         mSharedPrefsEditor.commit();
     }

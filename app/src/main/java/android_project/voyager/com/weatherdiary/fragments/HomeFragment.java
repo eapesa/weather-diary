@@ -162,7 +162,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
                 if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     Log.d("@@@HOME", "Getting new weather forecast");
                     Location currentLoc = mLocationManager.getLastKnownLocation(mProvider);
-
+                    mSharedPrefsEditor.putString(Constants.ARGS_LATITUDE,
+                            String.valueOf(currentLoc.getLatitude()));
+                    mSharedPrefsEditor.putString(Constants.ARGS_LONGITUDE,
+                            String.valueOf(currentLoc.getLongitude()));
+                    mSharedPrefsEditor.commit();
                     weatherApi.getWeatherForecast(HomeFragment.this, currentLoc.getLatitude(),
                             currentLoc.getLongitude());
                 } else {
@@ -211,15 +215,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
         mProgressDialogUpdate.hide();
 
         mSharedPrefsEditor.putString(Constants.ARGS_PLACENAME, weather.nameOfPlace);
-        mSharedPrefsEditor.commit();
         mSharedPrefsEditor.putString(Constants.ARGS_CELSIUS, weather.celsiusTemp);
-        mSharedPrefsEditor.commit();
         mSharedPrefsEditor.putString(Constants.ARGS_FAHRENHEIT, weather.fahrenheitTemp);
-        mSharedPrefsEditor.commit();
         mSharedPrefsEditor.putString(Constants.ARGS_CLOUDINESS, weather.cloudiness);
-        mSharedPrefsEditor.commit();
         mSharedPrefsEditor.putString(Constants.ARGS_WINDSPEED, weather.windSpeed);
-        mSharedPrefsEditor.commit();
         mSharedPrefsEditor.putString(Constants.ARGS_FORECAST_TIME, weather.forecastTime);
         mSharedPrefsEditor.commit();
 
