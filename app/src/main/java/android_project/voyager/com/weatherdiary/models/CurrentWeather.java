@@ -7,7 +7,7 @@ import android_project.voyager.com.weatherdiary.utils.Constants;
 /**
  * Created by eapesa on 7/15/15.
  */
-public class WeatherForecast {
+public class CurrentWeather {
     public Location mapCoordinates;
     public String nameOfPlace;
     public String celsiusTemp;

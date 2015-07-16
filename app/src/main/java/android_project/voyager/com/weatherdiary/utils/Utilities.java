@@ -4,26 +4,13 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import android_project.voyager.com.weatherdiary.R;
+
 /**
  * Created by eapesa on 7/13/15.
  */
 public class Utilities {
     private static String mTitle;
-    public static String onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = Labels.SECTION1;
-                break;
-            case 2:
-                mTitle = Labels.SECTION2;
-                break;
-            case 3:
-                mTitle = Labels.SECTION3;
-                break;
-        }
-        return mTitle;
-    }
-
     public static String kelvinToCelsius(int kelvinTemp) {
         double converted = kelvinTemp - 273.15;
         return String.format("%.1f", converted);

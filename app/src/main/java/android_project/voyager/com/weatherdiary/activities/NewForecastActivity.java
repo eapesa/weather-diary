@@ -1,4 +1,4 @@
-package android_project.voyager.com.weatherdiary;
+package android_project.voyager.com.weatherdiary.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android_project.voyager.com.weatherdiary.R;
+import android_project.voyager.com.weatherdiary.models.CurrentWeather;
 import android_project.voyager.com.weatherdiary.utils.Constants;
 import android_project.voyager.com.weatherdiary.utils.Utilities;
 
@@ -28,13 +29,12 @@ public class NewForecastActivity extends Activity {
         setContentView(R.layout.weatherdiary_newforecast_activity);
 
         initializeViews();
-        try {
-            processIntentExtras();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        processIntentExtras();
     }
 
+    /*
+     * Initializers
+     */
     private void initializeViews () {
         mPlaceNameTextView = (TextView) findViewById
                 (R.id.weatherdiary_newforecast_placename_textview);
@@ -48,30 +48,24 @@ public class NewForecastActivity extends Activity {
                 (R.id.weatherdiary_newforecast_wind_textview);
     }
 
-    private void processIntentExtras () throws JSONException {
-        String intentExtra = getIntent().getStringExtra("open_api_response");
-        JSONObject response = new JSONObject(intentExtra);
+    /*
+     * Custom Methods
+     */
+    private void processIntentExtras() {
+        Bundle bundle = getIntent().getExtras();
 
-        String city = response.getString("name");
-        String country = response.getJSONObject("sys").getString("country");
-        String namePlace = city + ", " + country;
-        Log.d("@@@NAMEPLACE", namePlace);
+        String namePlace = bundle.getString(Constants.ARGS_PLACENAME);
+        String celsius = bundle.getString(Constants.ARGS_CELSIUS);
+        String fahrenheit = bundle.getString(Constants.ARGS_FAHRENHEIT);
+        String cloudiness = bundle.getString(Constants.ARGS_CLOUDINESS);
+        String windSpeed = bundle.getString(Constants.ARGS_WINDSPEED);
+        String forecastTime = bundle.getString(Constants.ARGS_FORECAST_TIME);
+
         mPlaceNameTextView.setText(namePlace);
-
-        int mainTempKelvin = response.getJSONObject("main").getInt("temp");
-        mCelsiusTextView.setText( Utilities.kelvinToCelsius(mainTempKelvin)
-                + Constants.CELSIUS_UNIT );
-        mFahrenheitTextView.setText( Utilities.kelvinToFahrenheit(mainTempKelvin)
-                + Constants.FAHRENHEIT_UNIT );
-        Log.d("@@@TEMPC", Utilities.kelvinToCelsius(mainTempKelvin) + "C");
-        Log.d("@@@TEMPF", Utilities.kelvinToFahrenheit(mainTempKelvin) + "F");
-
-        String cloudiness = response.getJSONArray("weather").getJSONObject(0).getString("description");
+        mCelsiusTextView.setText(celsius);
+        mFahrenheitTextView.setText(fahrenheit);
         mCloudinessTextView.setText(cloudiness);
-        Log.d("@@@CLOUDINESS", cloudiness);
-
-        double wind = response.getJSONObject("wind").getDouble("speed");
-        mWindTextView.setText( String.valueOf(wind) + "m/s");
-        Log.d("@@@WIND", String.valueOf(wind) + "m/s");
+        mWindTextView.setText(windSpeed);
     }
+
 }

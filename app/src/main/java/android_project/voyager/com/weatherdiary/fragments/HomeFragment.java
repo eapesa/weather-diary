@@ -23,9 +23,8 @@ import android.widget.Toast;
 
 import android_project.voyager.com.weatherdiary.R;
 import android_project.voyager.com.weatherdiary.interfaces.WeatherApi;
-import android_project.voyager.com.weatherdiary.models.WeatherForecast;
+import android_project.voyager.com.weatherdiary.models.CurrentWeather;
 import android_project.voyager.com.weatherdiary.utils.Constants;
-import android_project.voyager.com.weatherdiary.utils.Labels;
 import android_project.voyager.com.weatherdiary.utils.Toasts;
 
 import static android_project.voyager.com.weatherdiary.interfaces.WeatherApi.*;
@@ -132,7 +131,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
         mButtonUpdate.setOnClickListener(this);
 
         mProgressDialogUpdate = new ProgressDialog(getActivity());
-        mProgressDialogUpdate.setMessage(Labels.HOME_UPDATE_FORECAST);
+//        mProgressDialogUpdate.setMessage(Labels.HOME_UPDATE_FORECAST);
+        mProgressDialogUpdate.setMessage(getString
+                (R.string.weatherdiary_progdialog_forecast_update_text));
     }
 
     private void initializeHelpers() {
@@ -152,7 +153,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
         }
     }
 
-    /**
+    /*
      * Button Click Listener Methods
      */
     @Override
@@ -160,7 +161,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
         switch (v.getId()) {
             case R.id.weatherdiary_home_updateforecast_button:
                 if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    Log.d("@@@HOME", "Getting new weather forecast");
                     Location currentLoc = mLocationManager.getLastKnownLocation(mProvider);
                     mSharedPrefsEditor.putString(Constants.ARGS_LATITUDE,
                             String.valueOf(currentLoc.getLatitude()));
@@ -176,17 +176,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
         }
     }
 
-    /**
-     * @ Location Listener Methods
+    /*
+     * Location Listener Methods
      */
     @Override
     public void onLocationChanged(Location location) {
 
     }
 
-    /*
-     * Location Listener Methods
-     */
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
 
@@ -211,7 +208,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
     }
 
     @Override
-    public void onUpdateViews(WeatherForecast weather) {
+    public void onUpdateViews(CurrentWeather weather) {
         mProgressDialogUpdate.hide();
 
         mSharedPrefsEditor.putString(Constants.ARGS_PLACENAME, weather.nameOfPlace);

@@ -2,7 +2,6 @@ package android_project.voyager.com.weatherdiary.interfaces;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +15,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import android_project.voyager.com.weatherdiary.models.WeatherForecast;
+import android_project.voyager.com.weatherdiary.models.CurrentWeather;
 import android_project.voyager.com.weatherdiary.utils.Constants;
 import android_project.voyager.com.weatherdiary.utils.Utilities;
 
@@ -34,7 +33,7 @@ public class WeatherApi {
 
     public interface WeatherApiListener {
         void onStartOfQuery();
-        void onUpdateViews(WeatherForecast weather);
+        void onUpdateViews(CurrentWeather weather);
     }
 
     public WeatherApi (Context context) {
@@ -47,9 +46,9 @@ public class WeatherApi {
         getWeather.execute();
     }
 
-    private WeatherForecast getData(InputStream inputStream) throws IOException, JSONException {
+    private CurrentWeather getData(InputStream inputStream) throws IOException, JSONException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        WeatherForecast weather = new WeatherForecast();
+        CurrentWeather weather = new CurrentWeather();
         String line;
         String result = "";
 
@@ -87,7 +86,7 @@ public class WeatherApi {
         return weather;
     }
 
-    private class GetWeatherForecastAsyncTask extends AsyncTask<Void, Void, WeatherForecast> {
+    private class GetWeatherForecastAsyncTask extends AsyncTask<Void, Void, CurrentWeather> {
         private WeatherApiListener mListener;
         private double mLatitude;
         private double mLongitude;
@@ -105,13 +104,13 @@ public class WeatherApi {
         }
 
         @Override
-        protected WeatherForecast doInBackground(Void... params) {
+        protected CurrentWeather doInBackground(Void... params) {
             InputStream inputStream = null;
             HttpURLConnection urlConnection;
             int statusCode;
 
             try {
-                URL url = new URL(Constants.WEATHER_API + "?lat=" + mLatitude
+                URL url = new URL(Constants.WEATHER_API_CURRENT + "?lat=" + mLatitude
                         + "&lon=" + mLongitude);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestProperty(contentTypeLabel, contentTypeValue);
@@ -129,7 +128,7 @@ public class WeatherApi {
         }
 
         @Override
-        protected void onPostExecute(WeatherForecast weather) {
+        protected void onPostExecute(CurrentWeather weather) {
             mListener.onUpdateViews(weather);
         }
     }

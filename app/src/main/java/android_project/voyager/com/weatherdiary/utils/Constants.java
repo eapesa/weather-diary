@@ -4,7 +4,8 @@ package android_project.voyager.com.weatherdiary.utils;
  * Created by eapesa on 7/13/15.
  */
 public class Constants {
-    public static final String WEATHER_API = "http://api.openweathermap.org/data/2.5/weather";
+    public static final String WEATHER_API_CURRENT = "http://api.openweathermap.org/data/2.5/weather";
+    public static final String WEATHER_API_FORECAST = "http://api.openweathermap.org/data/2.5/weather";
 
     public static final String CELSIUS_UNIT = "°C";
     public static final String FAHRENHEIT_UNIT = "°F";

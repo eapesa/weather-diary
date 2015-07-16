@@ -11,20 +11,16 @@ import android.os.Looper;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.Toast;
 
-import java.util.Set;
-
 import android_project.voyager.com.weatherdiary.fragments.ForecastDiaryFragment;
-import android_project.voyager.com.weatherdiary.fragments.GetForecastFragment;
+import android_project.voyager.com.weatherdiary.fragments.MarkPlacesFragment;
 import android_project.voyager.com.weatherdiary.fragments.HomeFragment;
 import android_project.voyager.com.weatherdiary.interfaces.WeatherApi;
-import android_project.voyager.com.weatherdiary.models.WeatherForecast;
+import android_project.voyager.com.weatherdiary.models.CurrentWeather;
 import android_project.voyager.com.weatherdiary.utils.Constants;
-import android_project.voyager.com.weatherdiary.utils.Labels;
 import android_project.voyager.com.weatherdiary.utils.Toasts;
 
 
@@ -40,7 +36,7 @@ public class MainActivity extends AppCompatActivity
     private Criteria mCriteria;
     private LocationManager mLocationManager;
     private Location mCurrentLocation;
-    private WeatherForecast mWeatherForecast;
+    private CurrentWeather mCurrentWeather;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +53,9 @@ public class MainActivity extends AppCompatActivity
      */
     private void initializeHelpers() {
         mForecastUpdate = new ProgressDialog(this);
-        mForecastUpdate.setMessage(Labels.HOME_UPDATE_FORECAST);
+//        mForecastUpdate.setMessage(Labels.HOME_UPDATE_FORECAST);
+        mForecastUpdate.setMessage(getString
+                (R.string.weatherdiary_progdialog_forecast_update_text));
 
         mSharedPrefs = getSharedPreferences(Constants.SHARED_PREFS_TAG, Context.MODE_PRIVATE);
         mSharedPrefsEditor = mSharedPrefs.edit();
@@ -77,8 +75,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void getWeatherForecast() {
-        // Add checker here that if something is stored, load it
-        // Also get the current time for displaying that the forecast obtained was since...
         String provider = mLocationManager.getBestProvider(mCriteria, false);
         mCurrentLocation = mLocationManager.getLastKnownLocation(provider);
         mWeatherApi.getWeatherForecast(this, mCurrentLocation.getLatitude(),
@@ -102,7 +98,7 @@ public class MainActivity extends AppCompatActivity
         switch (position) {
             case 1:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, GetForecastFragment.newInstance())
+                        .replace(R.id.container, MarkPlacesFragment.newInstance())
                         .commit();
                 break;
             case 2:
@@ -160,10 +156,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onUpdateViews(WeatherForecast weather) {
+    public void onUpdateViews(CurrentWeather weather) {
         mForecastUpdate.hide();
-        mWeatherForecast = weather;
-        mWeatherForecast.mapCoordinates = mCurrentLocation;
+        mCurrentWeather = weather;
+        mCurrentWeather.mapCoordinates = mCurrentLocation;
 
         mSharedPrefsEditor.putString(Constants.ARGS_LATITUDE,
                 String.valueOf(mCurrentLocation.getLatitude()));

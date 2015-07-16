@@ -3,14 +3,14 @@
     <string name="google_maps_key">AIzaSyCz07ej4cSX_sKgwny9WH5tPKS9F2F1ZzQ</string>
     <integer name="google_play_services_version">7327000</integer>
 
-    <string name="title_section1">Home</string>
-    <string name="title_section2">Get Forecast</string>
-    <string name="title_section3">Forecast History</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_example">Example action</string>
-
     <string name="action_settings">Settings</string>
+
+    <string name="weatherdiary_navdrawer_section1_label">Home</string>
+    <string name="weatherdiary_navdrawer_section2_label">Mark Places</string>
+    <string name="weatherdiary_navdrawer_section3_label">View Forecasts</string>
+    <string name="weatherdiary_progdialog_forecast_update_text">Updating weather forecast...</string>
+
 </resources>
