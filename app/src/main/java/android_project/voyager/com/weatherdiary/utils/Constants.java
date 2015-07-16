@@ -23,4 +23,15 @@ public class Constants {
     public static final String ALERT_FORECAST_AFFIRMATIVE_BUTTON_LABEL = "Ok";
     public static final String ALERT_FORECAST_NEGATIVE_BUTTON_LABEL = "Cancel";
 
+    public static final String DEFAULT_WEATHER_VALUES = "N/A";
+
+    public static final String SHARED_PREFS_TAG = "weather_diary_shared_prefs";
+    public static final String ARGS_LATITUDE = "current_latitude";
+    public static final String ARGS_LONGITUDE = "current_longitude";
+    public static final String ARGS_PLACENAME = "name_of_place";
+    public static final String ARGS_CELSIUS = "celsius";
+    public static final String ARGS_FAHRENHEIT = "fahrenheit";
+    public static final String ARGS_CLOUDINESS = "cloudiness";
+    public static final String ARGS_WINDSPEED = "windspeed";
+    public static final String ARGS_FORECAST_TIME = "time_of_forecast";
 }

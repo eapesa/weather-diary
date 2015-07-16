@@ -14,7 +14,7 @@ import android_project.voyager.com.weatherdiary.R;
  * Created by eapesa on 7/13/15.
  */
 public class ForecastDiaryFragment extends Fragment {
-    public static ForecastDiaryFragment newInstance(int sectionNumber) {
+    public static ForecastDiaryFragment newInstance() {
         ForecastDiaryFragment fragment = new ForecastDiaryFragment();
         return fragment;
     }

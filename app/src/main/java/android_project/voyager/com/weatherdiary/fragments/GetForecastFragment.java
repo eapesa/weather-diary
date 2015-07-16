@@ -56,7 +56,7 @@ public class GetForecastFragment extends Fragment implements OnMapReadyCallback,
     private String contentTypeValue = "application/json";
     private String httpMethod = "GET";
 
-    public static GetForecastFragment newInstance(int sectionNumber) {
+    public static GetForecastFragment newInstance() {
         GetForecastFragment fragment = new GetForecastFragment();
         return fragment;
     }

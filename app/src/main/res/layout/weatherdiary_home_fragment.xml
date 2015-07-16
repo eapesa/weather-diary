@@ -25,6 +25,17 @@
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/weatherdiary_home_forecasttime_textview"
+        android:text="Forecast since ..."
+        android:textSize="14sp"
+        android:textStyle="italic"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     <LinearLayout
         android:orientation="horizontal"
         android:weightSum="1"
@@ -65,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView
-                android:layout_weight="0.2"
+                android:layout_weight="0.25"
                 android:text="Cloudiness"
                 android:textSize="14sp"
                 android:layout_gravity="center"
@@ -73,15 +84,16 @@
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/weatherdiary_home_cloudiness_textview"
-                android:layout_weight="0.3"
+                android:layout_weight="0.25"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:layout_marginBottom="10dp"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
-                android:layout_weight="0.2"
+                android:layout_weight="0.25"
                 android:text="Wind"
                 android:textSize="14sp"
                 android:layout_gravity="center"
@@ -89,9 +101,10 @@
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/weatherdiary_home_wind_textview"
-                android:layout_weight="0.3"
+                android:layout_weight="0.25"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:layout_marginBottom="30dp"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:layout_width="wrap_content"

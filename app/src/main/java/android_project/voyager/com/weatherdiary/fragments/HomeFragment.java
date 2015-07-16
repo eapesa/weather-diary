@@ -10,7 +10,6 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.Nullable;
@@ -22,49 +21,51 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import android_project.voyager.com.weatherdiary.R;
+import android_project.voyager.com.weatherdiary.interfaces.WeatherApi;
+import android_project.voyager.com.weatherdiary.models.WeatherForecast;
 import android_project.voyager.com.weatherdiary.utils.Constants;
 import android_project.voyager.com.weatherdiary.utils.Labels;
 import android_project.voyager.com.weatherdiary.utils.Toasts;
-import android_project.voyager.com.weatherdiary.utils.Utilities;
+
+import static android_project.voyager.com.weatherdiary.interfaces.WeatherApi.*;
 
 /**
  * Created by eapesa on 7/13/15.
  */
-public class HomeFragment extends Fragment implements View.OnClickListener, LocationListener {
+public class HomeFragment extends Fragment implements View.OnClickListener, LocationListener,
+        WeatherApiListener {
 
     public static final String TAG = HomeFragment.class.getSimpleName();
 
-    Button mButtonUpdate;
-    TextView mTextViewPlaceName;
-    TextView mTextViewCelsius;
-    TextView mTextViewFahrenheit;
-    TextView mTextViewCloudiness;
-    TextView mTextViewWind;
+    private Button mButtonUpdate;
+    private TextView mTextViewPlaceName;
+    private TextView mTextViewCelsius;
+    private TextView mTextViewFahrenheit;
+    private TextView mTextViewCloudiness;
+    private TextView mTextViewWind;
+    private TextView mTextViewTime;
 
-    Context mContext;
-    Criteria criteria;
-    ProgressDialog mProgressDialogUpdate;
-    LocationManager locationManager;
-    SharedPreferences mSharedPrefs;
-    SharedPreferences.Editor mSharedPrefsEditor;
+    private SharedPreferences mSharedPrefs;
+    private SharedPreferences.Editor mSharedPrefsEditor;
+    private String placeName;
+    private String celsius;
+    private String fahrenheit;
+    private String cloudiness;
+    private String windSpeed;
+    private String forecastTime;
 
-    String contentTypeLabel = "Content-Type";
-    String contentTypeValue = "application/json";
-    String httpMethod = "GET";
+    private Context mContext;
+    private Criteria mCriteria;
+    private String mProvider;
+    private ProgressDialog mProgressDialogUpdate;
+    private LocationManager mLocationManager;
+
+    private WeatherApi weatherApi;
 
     public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
+
         return fragment;
     }
 
@@ -72,55 +73,98 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.mContext = activity;
+        initializeHelpers();
+        loadTexts();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d("@@@HOME", "ON CREATE VIEW");
         View rootView = inflater.inflate(R.layout.weatherdiary_home_fragment, container, false);
 
-        mTextViewPlaceName = (TextView) rootView.findViewById
-                (R.id.weatherdiary_home_placename_textview);
-        mTextViewCelsius = (TextView) rootView.findViewById
-                (R.id.weatherdiary_home_celsius_textview);
-        mTextViewFahrenheit = (TextView) rootView.findViewById
-                (R.id.weatherdiary_home_fahrenheit_textview);
-        mTextViewCloudiness = (TextView) rootView.findViewById
-                (R.id.weatherdiary_home_cloudiness_textview);
-        mTextViewWind = (TextView) rootView.findViewById
-                (R.id.weatherdiary_home_wind_textview);
-        mButtonUpdate = (Button) rootView.findViewById
-                (R.id.weatherdiary_home_updateforecast_button);
-        mButtonUpdate.setOnClickListener(this);
+        initializeViews(rootView);
 
-        mProgressDialogUpdate = new ProgressDialog(this.getActivity());
-        mProgressDialogUpdate.setMessage(Labels.HOME_UPDATE_FORECAST);
-
-//        mContext = rootView.getContext();
-        mSharedPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
-        mSharedPrefsEditor = mSharedPrefs.edit();
-
-        criteria = new Criteria();
-        locationManager = (LocationManager) mContext
-                .getSystemService(Context.LOCATION_SERVICE);
-
-        if ( locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ){
-            locationManager.requestSingleUpdate(criteria, this, Looper.getMainLooper());
-        } else {
-            Toast.makeText(getActivity(), Toasts.NO_GPS, Toast.LENGTH_SHORT).show();
-        }
         return rootView;
     }
 
-    /***
-     * @ Button Click Listener Methods
+    /*
+     * Initializers
+     */
+    private void loadTexts () {
+        placeName = mSharedPrefs.getString
+                (Constants.ARGS_PLACENAME, Constants.DEFAULT_WEATHER_VALUES);
+        celsius = mSharedPrefs.getString
+                (Constants.ARGS_CELSIUS, Constants.DEFAULT_WEATHER_VALUES);
+        fahrenheit = mSharedPrefs.getString
+                (Constants.ARGS_FAHRENHEIT, Constants.DEFAULT_WEATHER_VALUES);
+        cloudiness = mSharedPrefs.getString
+                (Constants.ARGS_CLOUDINESS, Constants.DEFAULT_WEATHER_VALUES);
+        windSpeed = mSharedPrefs.getString
+                (Constants.ARGS_WINDSPEED, Constants.DEFAULT_WEATHER_VALUES);
+        forecastTime = mSharedPrefs.getString
+                (Constants.ARGS_FORECAST_TIME, "Forecast since " + Constants.DEFAULT_WEATHER_VALUES);
+    }
+
+    private void initializeViews(View view) {
+        mTextViewPlaceName = (TextView) view.findViewById
+                (R.id.weatherdiary_home_placename_textview);
+        mTextViewCelsius = (TextView) view.findViewById
+                (R.id.weatherdiary_home_celsius_textview);
+        mTextViewFahrenheit = (TextView) view.findViewById
+                (R.id.weatherdiary_home_fahrenheit_textview);
+        mTextViewCloudiness = (TextView) view.findViewById
+                (R.id.weatherdiary_home_cloudiness_textview);
+        mTextViewWind = (TextView) view.findViewById
+                (R.id.weatherdiary_home_wind_textview);
+        mTextViewTime = (TextView) view.findViewById
+                (R.id.weatherdiary_home_forecasttime_textview);
+
+        mTextViewPlaceName.setText(placeName);
+        mTextViewCelsius.setText(celsius);
+        mTextViewFahrenheit.setText(fahrenheit);
+        mTextViewCloudiness.setText(cloudiness);
+        mTextViewWind.setText(windSpeed);
+        mTextViewTime.setText(forecastTime);
+
+        mButtonUpdate = (Button) view.findViewById
+                (R.id.weatherdiary_home_updateforecast_button);
+        mButtonUpdate.setOnClickListener(this);
+
+        mProgressDialogUpdate = new ProgressDialog(getActivity());
+        mProgressDialogUpdate.setMessage(Labels.HOME_UPDATE_FORECAST);
+    }
+
+    private void initializeHelpers() {
+        weatherApi = new WeatherApi(mContext);
+        mSharedPrefs = getActivity().getSharedPreferences
+                (Constants.SHARED_PREFS_TAG, Context.MODE_PRIVATE);
+        mSharedPrefsEditor = mSharedPrefs.edit();
+        mCriteria = new Criteria();
+        mLocationManager = (LocationManager) mContext
+                .getSystemService(Context.LOCATION_SERVICE);
+        mProvider = mLocationManager.getBestProvider(mCriteria, false);
+
+        if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            mLocationManager.requestSingleUpdate(mCriteria, this, Looper.getMainLooper());
+        } else {
+            Toast.makeText(getActivity(), Toasts.NO_GPS, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Button Click Listener Methods
      */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.weatherdiary_home_updateforecast_button:
-                if ( locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ){
-                    locationManager.requestSingleUpdate(criteria, HomeFragment.this, Looper.getMainLooper());
+                if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    Log.d("@@@HOME", "Getting new weather forecast");
+                    Location currentLoc = mLocationManager.getLastKnownLocation(mProvider);
+
+                    weatherApi.getWeatherForecast(HomeFragment.this, currentLoc.getLatitude(),
+                            currentLoc.getLongitude());
                 } else {
                     Toast.makeText(getActivity(), Toasts.NO_GPS, Toast.LENGTH_SHORT).show();
                 }
@@ -128,41 +172,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
         }
     }
 
-    /***
+    /**
      * @ Location Listener Methods
      */
     @Override
     public void onLocationChanged(Location location) {
-        if (location == null) {
-            Toast.makeText(getActivity(), Toasts.NO_GPS, Toast.LENGTH_SHORT).show();
-            return;
-        }
 
-        double latitude;
-        double longitude;
-        String latitudeString = mSharedPrefs.getString(Constants.CURRENT_LAT_LABEL, null);
-        String longitudeString = mSharedPrefs.getString(Constants.CURRENT_LONG_LABEL, null);
-        if (latitudeString == null && longitudeString == null) {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-
-            mSharedPrefsEditor.putString(Constants.CURRENT_LAT_LABEL, String.valueOf(latitude));
-            mSharedPrefsEditor.putString(Constants.CURRENT_LONG_LABEL, String.valueOf(longitude));
-            mSharedPrefsEditor.commit();
-        } else {
-            latitude = Double.parseDouble(latitudeString);
-            longitude = Double.parseDouble(longitudeString);
-        }
-        Log.d(TAG, "Getting coordinates... LAT: " + latitude + " LON: " + longitude);
-
-        Log.d("HELLO", "### getActivity is "+mContext);
-        if (Utilities.checkNetworkConnection(mContext)) {
-            getWeatherForecast(latitude, longitude);
-        } else {
-            Toast.makeText(getActivity(), Toasts.NO_NETWORK, Toast.LENGTH_SHORT).show();
-        }
     }
 
+    /*
+     * Location Listener Methods
+     */
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
 
@@ -179,96 +199,35 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
     }
 
     /*
-     * @ Custom functionalities
+     * Weather API Listener Methods
      */
-    private void getWeatherForecast(final double latitude, final double longitude) {
-        new AsyncTask<Void, Void, String>() {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                mProgressDialogUpdate.show();
-            }
-
-            @Override
-            protected String doInBackground(Void... params) {
-                InputStream inputStream = null;
-                HttpURLConnection urlConnection;
-                int statusCode;
-
-                try {
-                    URL url = new URL(Constants.WEATHER_API + "?lat=" + latitude
-                            + "&lon=" + longitude);
-                    urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.setRequestProperty(contentTypeLabel, contentTypeValue);
-                    urlConnection.setRequestMethod(httpMethod);
-                    statusCode = urlConnection.getResponseCode();
-                    inputStream = urlConnection.getInputStream();
-
-                    if (statusCode == 200) {
-                        return readInputStream(inputStream);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(String response) {
-                mProgressDialogUpdate.hide();
-                Log.d(TAG, "RESPONSE: " + response);
-                try {
-                    updateForecast(response);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.execute();
+    @Override
+    public void onStartOfQuery() {
+        mProgressDialogUpdate.show();
     }
 
-    private String readInputStream(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+    @Override
+    public void onUpdateViews(WeatherForecast weather) {
+        mProgressDialogUpdate.hide();
 
-        String line;
-        String result = "";
-
-        while ((line = bufferedReader.readLine()) != null) {
-            result += line;
-        }
-
-        if (null != inputStream) {
-            inputStream.close();
-        }
-
-        return result;
-    }
-
-    private void updateForecast(String json) throws JSONException {
-        JSONObject mainJson = new JSONObject(json);
-
-        if (mainJson.getInt("cod") != 200) {
-            Toast.makeText(getActivity(), Toasts.WEATHER_API_FAILED, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        String city = mainJson.getString("name");
-        String country = mainJson.getJSONObject("sys").getString("country");
-        String namePlace = city + ", " + country;
-        mSharedPrefsEditor.putString(Constants.CURRENT_PLACENAME_LABEL, namePlace);
+        mSharedPrefsEditor.putString(Constants.ARGS_PLACENAME, weather.nameOfPlace);
         mSharedPrefsEditor.commit();
-        mTextViewPlaceName.setText(namePlace);
+        mSharedPrefsEditor.putString(Constants.ARGS_CELSIUS, weather.celsiusTemp);
+        mSharedPrefsEditor.commit();
+        mSharedPrefsEditor.putString(Constants.ARGS_FAHRENHEIT, weather.fahrenheitTemp);
+        mSharedPrefsEditor.commit();
+        mSharedPrefsEditor.putString(Constants.ARGS_CLOUDINESS, weather.cloudiness);
+        mSharedPrefsEditor.commit();
+        mSharedPrefsEditor.putString(Constants.ARGS_WINDSPEED, weather.windSpeed);
+        mSharedPrefsEditor.commit();
+        mSharedPrefsEditor.putString(Constants.ARGS_FORECAST_TIME, weather.forecastTime);
+        mSharedPrefsEditor.commit();
 
-        int mainTempKelvin = mainJson.getJSONObject("main").getInt("temp");
-        mTextViewCelsius.setText( Utilities.kelvinToCelsius(mainTempKelvin)
-                + Constants.CELSIUS_UNIT );
-        mTextViewFahrenheit.setText( Utilities.kelvinToFahrenheit(mainTempKelvin)
-                + Constants.FAHRENHEIT_UNIT );
-
-        String cloudiness = mainJson.getJSONArray("weather").getJSONObject(0).getString("description");
-        mTextViewCloudiness.setText(cloudiness);
-
-        double wind = mainJson.getJSONObject("wind").getDouble("speed");
-        mTextViewWind.setText( String.valueOf(wind) + "m/s");
+        mTextViewPlaceName.setText(weather.nameOfPlace);
+        mTextViewCelsius.setText(weather.celsiusTemp);
+        mTextViewFahrenheit.setText(weather.fahrenheitTemp);
+        mTextViewCloudiness.setText(weather.cloudiness);
+        mTextViewWind.setText(weather.windSpeed);
+        mTextViewTime.setText(weather.forecastTime);
     }
 }
