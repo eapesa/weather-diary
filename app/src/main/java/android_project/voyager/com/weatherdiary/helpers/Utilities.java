@@ -1,4 +1,4 @@
-package android_project.voyager.com.weatherdiary.utils;
+package android_project.voyager.com.weatherdiary.helpers;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -10,7 +10,6 @@ import android_project.voyager.com.weatherdiary.R;
  * Created by eapesa on 7/13/15.
  */
 public class Utilities {
-    private static String mTitle;
     public static String kelvinToCelsius(int kelvinTemp) {
         double converted = kelvinTemp - 273.15;
         return String.format("%.1f", converted);

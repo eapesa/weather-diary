@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
@@ -24,17 +23,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.ArrayList;
 
 import android_project.voyager.com.weatherdiary.R;
-import android_project.voyager.com.weatherdiary.activities.NewForecastActivity;
+import android_project.voyager.com.weatherdiary.activities.MarkedPlaceForecastActivity;
+import android_project.voyager.com.weatherdiary.dao.MarkedPlacesWeatherDAO;
+import android_project.voyager.com.weatherdiary.interfaces.ForecastApi;
 import android_project.voyager.com.weatherdiary.interfaces.WeatherApi;
-import android_project.voyager.com.weatherdiary.models.CurrentWeather;
+import android_project.voyager.com.weatherdiary.models.Weather;
 import android_project.voyager.com.weatherdiary.utils.Constants;
 
 /**
@@ -42,7 +38,7 @@ import android_project.voyager.com.weatherdiary.utils.Constants;
  */
 public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener,
-        WeatherApi.WeatherApiListener {
+        ForecastApi.ForecastApiListener {
 
     private static SupportMapFragment mGoogleMapFragment;
     private GoogleMap mGoogleMap;
@@ -50,14 +46,12 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
     SharedPreferences mSharedPrefs;
     SharedPreferences.Editor mSharedPrefsEditor;
     private ProgressDialog mProgressDialogUpdate;
-    private WeatherApi mWeatherApi;
+    private ForecastApi mForecastApi;
+    private MarkedPlacesWeatherDAO mWeatherDAO;
 
     private double mLatitude;
     private double mLongitude;
-
-    private String contentTypeLabel = "Content-Type";
-    private String contentTypeValue = "application/json";
-    private String httpMethod = "GET";
+    private MarkerOptions mCurrentMarker;
 
     public static MarkPlacesFragment newInstance() {
         MarkPlacesFragment fragment = new MarkPlacesFragment();
@@ -85,7 +79,8 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
                 Constants.DEFAULT_LAT_VALUE));
         mLongitude = Double.parseDouble( mSharedPrefs.getString(Constants.ARGS_LONGITUDE,
                 Constants.DEFAULT_LONG_VALUE) );
-        mWeatherApi = new WeatherApi(getActivity());
+        mForecastApi = new ForecastApi(getActivity());
+        mWeatherDAO = new MarkedPlacesWeatherDAO(getActivity());
     }
 
     private void initializeViews() {
@@ -111,7 +106,7 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
     /*
      * Custom Methods
      */
-    private Bundle putInBundle(CurrentWeather weather) {
+    private Bundle putInBundle(Weather weather) {
         Bundle bundle = new Bundle();
 
         bundle.putString(Constants.ARGS_PLACENAME, weather.nameOfPlace);
@@ -132,9 +127,8 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
                 .setPositiveButton(Constants.ALERT_FORECAST_AFFIRMATIVE_BUTTON_LABEL, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        getWeatherForecast(point.latitude, point.longitude);
-                        mWeatherApi.getWeatherForecast(MarkPlacesFragment.this,
-                                point.latitude, point.longitude);
+                        mForecastApi.getForecast(MarkPlacesFragment.this, point.latitude,
+                                point.longitude);
                         mGoogleMap.addMarker(mapMarker);
                     }
                 })
@@ -147,68 +141,6 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
         dialog.show();
     }
 
-//    private void getWeatherForecast(final double latitude, final double longitude) {
-//        new AsyncTask<Void, Void, String>() {
-//            @Override
-//            protected void onPreExecute() {
-//                super.onPreExecute();
-//                mProgressDialogUpdate.show();
-//            }
-//
-//            @Override
-//            protected String doInBackground(Void... params) {
-//                InputStream inputStream = null;
-//                HttpURLConnection urlConnection;
-//                int statusCode;
-//
-//                try {
-//                    URL url = new URL(Constants.WEATHER_API_CURRENT + "?lat=" + latitude
-//                            + "&lon=" + longitude);
-//                    urlConnection = (HttpURLConnection) url.openConnection();
-//                    urlConnection.setRequestProperty(contentTypeLabel, contentTypeValue);
-//                    urlConnection.setRequestMethod(httpMethod);
-//                    statusCode = urlConnection.getResponseCode();
-//                    inputStream = urlConnection.getInputStream();
-//
-//                    if (statusCode == 200) {
-//                        return readInputStream(inputStream);
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                return null;
-//            }
-//
-//            @Override
-//            protected void onPostExecute(String response) {
-//                mProgressDialogUpdate.hide();
-//                Log.d("@@@ CHOSEN PLACE", "RESPONSE: " + response);
-////                mSharedPrefsEditor.putString("open_api_response", response);
-//                Intent intent = new Intent(getActivity().getApplicationContext(), NewForecastActivity.class);
-//                intent.putExtra("open_api_response", response);
-//                startActivity(intent);
-//
-//            }
-//        }.execute();
-//    }
-//
-//    private String readInputStream(InputStream inputStream) throws IOException {
-//        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-//
-//        String line;
-//        String result = "";
-//
-//        while ((line = bufferedReader.readLine()) != null) {
-//            result += line;
-//        }
-//
-//        if (null != inputStream) {
-//            inputStream.close();
-//        }
-//
-//        return result;
-//    }
-
     /*
      * Google Map Listener Methods
      */
@@ -217,7 +149,7 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
         this.mGoogleMap = googleMap;
 
         LatLng currentLatLng = new LatLng(mLatitude, mLongitude);
-        String placeLabel = mSharedPrefs.getString(Constants.CURRENT_PLACENAME_LABEL,
+        String placeLabel = mSharedPrefs.getString(Constants.ARGS_PLACENAME,
                 Constants.DEFAULT_PLACENAME_VALUE);
 
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng,
@@ -232,6 +164,7 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
     public void onMapClick(LatLng latLng) {
         MarkerOptions mapMarker = new MarkerOptions().position(
                 new LatLng(latLng.latitude, latLng.longitude)).title("New Place");
+        mCurrentMarker = mapMarker;
         getForecastDialog(mapMarker, latLng);
     }
 
@@ -249,11 +182,25 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void onUpdateViews(CurrentWeather weather) {
+    public void onProcessResult(ArrayList<Weather> weathers) {
         mProgressDialogUpdate.hide();
+        String nameOfPlace = weathers.get(0).nameOfPlace;
+        String forecastTime = weathers.get(0).forecastTime;
+
+        for (int i = 0; i < weathers.size(); i++) {
+            Weather weather = weathers.get(i);
+            Log.d("@@@ FORECAST", "DESCRIPTION: " + weather.forecastDescription
+                + " | DAY: " + weather.day + " MONTH: " + weather.month);
+            mWeatherDAO.storeWeatherData(mCurrentMarker.toString() + "-" + i, weather);
+//            Weather newWeather = mWeatherDAO.getSpecificWeatherData(mCurrentMarker.toString() + "-" + i);
+//            Log.d("@@@ after insert", "desc: " + newWeather.forecastDescription);
+        }
+
         Intent intent = new Intent(getActivity().getApplicationContext(),
-                NewForecastActivity.class);
-        intent.putExtras(putInBundle(weather));
+                MarkedPlaceForecastActivity.class);
+        intent.putExtra(Constants.ARGS_MARKER, mCurrentMarker.toString());
+        intent.putExtra(Constants.ARGS_PLACENAME, nameOfPlace);
+        intent.putExtra(Constants.ARGS_FORECAST_TIME, forecastTime);
         startActivity(intent);
     }
 }

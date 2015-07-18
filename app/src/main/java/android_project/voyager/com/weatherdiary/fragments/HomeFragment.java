@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import android_project.voyager.com.weatherdiary.R;
 import android_project.voyager.com.weatherdiary.interfaces.WeatherApi;
-import android_project.voyager.com.weatherdiary.models.CurrentWeather;
+import android_project.voyager.com.weatherdiary.models.Weather;
 import android_project.voyager.com.weatherdiary.utils.Constants;
 import android_project.voyager.com.weatherdiary.utils.Toasts;
 
@@ -208,7 +208,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
     }
 
     @Override
-    public void onUpdateViews(CurrentWeather weather) {
+    public void onUpdateViews(Weather weather) {
         mProgressDialogUpdate.hide();
 
         mSharedPrefsEditor.putString(Constants.ARGS_PLACENAME, weather.nameOfPlace);

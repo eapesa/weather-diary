@@ -19,7 +19,7 @@ import android_project.voyager.com.weatherdiary.fragments.ForecastDiaryFragment;
 import android_project.voyager.com.weatherdiary.fragments.MarkPlacesFragment;
 import android_project.voyager.com.weatherdiary.fragments.HomeFragment;
 import android_project.voyager.com.weatherdiary.interfaces.WeatherApi;
-import android_project.voyager.com.weatherdiary.models.CurrentWeather;
+import android_project.voyager.com.weatherdiary.models.Weather;
 import android_project.voyager.com.weatherdiary.utils.Constants;
 import android_project.voyager.com.weatherdiary.utils.Toasts;
 
@@ -32,11 +32,12 @@ public class MainActivity extends AppCompatActivity
     private ProgressDialog mForecastUpdate;
     private SharedPreferences mSharedPrefs;
     private SharedPreferences.Editor mSharedPrefsEditor;
+//    private DatabaseHelper mDBHelper;
     private WeatherApi mWeatherApi;
     private Criteria mCriteria;
     private LocationManager mLocationManager;
     private Location mCurrentLocation;
-    private CurrentWeather mCurrentWeather;
+    private Weather mWeather;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +54,12 @@ public class MainActivity extends AppCompatActivity
      */
     private void initializeHelpers() {
         mForecastUpdate = new ProgressDialog(this);
-//        mForecastUpdate.setMessage(Labels.HOME_UPDATE_FORECAST);
         mForecastUpdate.setMessage(getString
                 (R.string.weatherdiary_progdialog_forecast_update_text));
 
         mSharedPrefs = getSharedPreferences(Constants.SHARED_PREFS_TAG, Context.MODE_PRIVATE);
         mSharedPrefsEditor = mSharedPrefs.edit();
+
         mWeatherApi = new WeatherApi(this);
     }
 
@@ -156,10 +157,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onUpdateViews(CurrentWeather weather) {
+    public void onUpdateViews(Weather weather) {
         mForecastUpdate.hide();
-        mCurrentWeather = weather;
-        mCurrentWeather.mapCoordinates = mCurrentLocation;
+        mWeather = weather;
+        mWeather.mapCoordinates = mCurrentLocation;
 
         mSharedPrefsEditor.putString(Constants.ARGS_LATITUDE,
                 String.valueOf(mCurrentLocation.getLatitude()));
