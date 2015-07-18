@@ -65,7 +65,7 @@ public class WeatherApi {
         String namePlace = city + ", " + country;
         weather.nameOfPlace = namePlace;
 
-        int mainTempKelvin = json.getJSONObject("main").getInt("temp");
+        double mainTempKelvin = json.getJSONObject("main").getDouble("temp");
         weather.celsiusTemp = String.valueOf( Utilities.kelvinToCelsius(mainTempKelvin) )
                 + Constants.CELSIUS_UNIT ;
         weather.fahrenheitTemp = String.valueOf( Utilities.kelvinToFahrenheit(mainTempKelvin) )

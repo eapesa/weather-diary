@@ -3,6 +3,9 @@ package android_project.voyager.com.weatherdiary.activities;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,17 +20,15 @@ import android_project.voyager.com.weatherdiary.utils.Constants;
 /**
  * Created by eapesa on 7/14/15.
  */
-public class MarkedPlaceForecastActivity extends Activity {
-//    TextView mPlaceNameTextView;
-//    TextView mCelsiusTextView;
-//    TextView mFahrenheitTextView;
-//    TextView mCloudinessTextView;
-//    TextView mWindTextView;
+public class MarkedPlaceForecastActivity extends Activity implements
+        ListView.OnItemClickListener {
     private TextView mPlaceNameTextView;
     private TextView mForecastTimeTextView;
     private ListView mForecastListView;
+    private DailyForecastAdapter dailyForecastAdapter;
     private MarkedPlacesWeatherDAO weatherDAO;
     private String mCurrentMarker;
+    private int mTempType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +45,14 @@ public class MarkedPlaceForecastActivity extends Activity {
      * Initializers
      */
     private void initializeViews () {
+        mTempType = 1;
         mPlaceNameTextView = (TextView) findViewById
                 (R.id.weatherdiary_markedplace_placename_textview);
         mForecastTimeTextView = (TextView) findViewById
                 (R.id.weatherdiary_markedplace_forecastTime_textview);
         mForecastListView = (ListView) findViewById
                 (R.id.weatherdiary_markedplace_listview);
+        mForecastListView.setOnItemClickListener(this);
     }
 
     private void initializeHelpers() {
@@ -70,6 +73,14 @@ public class MarkedPlaceForecastActivity extends Activity {
 
     private void populateListView() {
         ArrayList<Weather> weathers = weatherDAO.getDailyForecast(mCurrentMarker);
-        mForecastListView.setAdapter(new DailyForecastAdapter(this, weathers));
+        dailyForecastAdapter = new DailyForecastAdapter(this, weathers, mTempType);
+        mForecastListView.setAdapter(dailyForecastAdapter);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        mTempType = mTempType * -1;
+        dailyForecastAdapter.changeTempUnit();
+        dailyForecastAdapter.notifyDataSetChanged();
     }
 }

@@ -189,11 +189,7 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
 
         for (int i = 0; i < weathers.size(); i++) {
             Weather weather = weathers.get(i);
-            Log.d("@@@ FORECAST", "DESCRIPTION: " + weather.forecastDescription
-                + " | DAY: " + weather.day + " MONTH: " + weather.month);
             mWeatherDAO.storeWeatherData(mCurrentMarker.toString() + "-" + i, weather);
-//            Weather newWeather = mWeatherDAO.getSpecificWeatherData(mCurrentMarker.toString() + "-" + i);
-//            Log.d("@@@ after insert", "desc: " + newWeather.forecastDescription);
         }
 
         Intent intent = new Intent(getActivity().getApplicationContext(),

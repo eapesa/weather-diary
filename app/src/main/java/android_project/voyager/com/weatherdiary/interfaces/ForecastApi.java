@@ -75,7 +75,7 @@ public class ForecastApi {
         for (int i = 0; i < forecastList.length(); i++) {
             Weather weather = new Weather();
             weather.nameOfPlace = namePlace;
-            weather.forecastTime = currentDateTime;
+            weather.forecastTime = "Forecast since " + currentDateTime;
 
             JSONObject forecast = forecastList.getJSONObject(i);
 
@@ -84,14 +84,12 @@ public class ForecastApi {
 
             weather.day = String.valueOf(dt.get(Calendar.DAY_OF_MONTH));
             weather.month = Constants.MONTHS[dt.get(Calendar.MONTH)];
-            weather.minTemp = Utilities.kelvinToCelsius(forecast.getJSONObject("temp")
-                    .getInt("min")) + Constants.CELSIUS_UNIT;
-            weather.maxTemp = Utilities.kelvinToCelsius(forecast.getJSONObject("temp")
-                    .getInt("max")) + Constants.CELSIUS_UNIT;;
+            weather.minTemp = forecast.getJSONObject("temp").getString("min");
+            weather.maxTemp = forecast.getJSONObject("temp").getString("max");
             weather.windSpeed = "Wind Speed: " + forecast.getString("speed") + "m/s";
             weather.forecastDescription = forecast.getJSONArray("weather")
                     .getJSONObject(0).getString("description");
-            weather.cloudiness = "Cloudiness percentage: " + forecast.getString("clouds");
+            weather.cloudiness = "Cloudiness percentage: " + forecast.getString("clouds") + "%";
 
             weatherArray.add(weather);
         }

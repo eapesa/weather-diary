@@ -28,7 +28,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="50dp" />
+                android:layout_height="52dp" />
             <TextView
                 android:id="@+id/weatherdiary_markedplace_forecast_listview_month_textview"
                 android:layout_weight="0.2"
@@ -41,6 +41,7 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/weatherdiary_markedplace_forecast_temp_linearlayout"
             android:orientation="vertical"
             android:weightSum="1"
             android:layout_gravity="center"

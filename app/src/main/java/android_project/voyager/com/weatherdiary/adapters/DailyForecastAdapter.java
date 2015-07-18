@@ -7,25 +7,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import android_project.voyager.com.weatherdiary.R;
+import android_project.voyager.com.weatherdiary.helpers.Utilities;
 import android_project.voyager.com.weatherdiary.models.Weather;
+import android_project.voyager.com.weatherdiary.utils.Constants;
 
 /**
  * Created by eapesa on 7/18/15.
  */
 public class DailyForecastAdapter extends ArrayAdapter<Weather> {
 
+    private LinearLayout mLinearLayout;
     private Context mContext;
     private ArrayList<Weather> mWeathers;
+    private int mTempType;
 
-    public DailyForecastAdapter(Context context, ArrayList<Weather> weathers) {
+    public DailyForecastAdapter(Context context, ArrayList<Weather> weathers, int tempType) {
         super(context, R.layout.weatherdiary_markedplace_forecast_listview_row, weathers);
         this.mContext = context;
         this.mWeathers = weathers;
+        this.mTempType = tempType;
     }
 
     static class ViewHolder {
@@ -36,6 +42,10 @@ public class DailyForecastAdapter extends ArrayAdapter<Weather> {
         public TextView description;
         public TextView windSpeed;
         public TextView cloudiness;
+    }
+
+    public void changeTempUnit() {
+        this.mTempType = this.mTempType * -1;
     }
 
     @Override
@@ -72,14 +82,23 @@ public class DailyForecastAdapter extends ArrayAdapter<Weather> {
 
         vHolder.forecastDay.setText(weather.day);
         vHolder.forecastMonth.setText(weather.month);
-        vHolder.minTemp.setText(weather.minTemp);
-        vHolder.maxTemp.setText(weather.maxTemp);
+
+        double minTempNum = Double.parseDouble(weather.minTemp);
+        double maxTempNum = Double.parseDouble(weather.maxTemp);
+        String minTemp = null;
+        String maxTemp = null;
+        if (mTempType == 1) {
+            minTemp = Utilities.kelvinToCelsius(minTempNum) + Constants.CELSIUS_UNIT;
+            maxTemp = Utilities.kelvinToCelsius(maxTempNum) + Constants.CELSIUS_UNIT;
+        } else {
+            minTemp = Utilities.kelvinToFahrenheit(minTempNum) + Constants.FAHRENHEIT_UNIT;
+            maxTemp = Utilities.kelvinToFahrenheit(maxTempNum) + Constants.FAHRENHEIT_UNIT;
+        }
+        vHolder.minTemp.setText(minTemp);
+        vHolder.maxTemp.setText(maxTemp);
         vHolder.description.setText(weather.forecastDescription);
         vHolder.windSpeed.setText(weather.windSpeed);
         vHolder.cloudiness.setText(weather.cloudiness);
-
-        Log.d("@@@ AD", "DESC: " + weather.forecastDescription);
-        Log.d("@@@ AD", "WIND SPEED: " + weather.windSpeed);
 
         return view;
     }
