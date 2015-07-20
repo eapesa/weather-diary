@@ -23,20 +23,21 @@
                 android:id="@+id/weatherdiary_markedplace_forecast_listview_day_textview"
                 android:layout_weight="0.8"
                 android:text="18"
-                android:textSize="48sp"
+                android:textSize="30sp"
                 android:textStyle="bold"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="52dp" />
+                android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/weatherdiary_markedplace_forecast_listview_month_textview"
                 android:layout_weight="0.2"
                 android:text="July"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_gravity="center"
                 android:gravity="center"
+                android:paddingBottom="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
