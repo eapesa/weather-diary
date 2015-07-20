@@ -19,7 +19,7 @@ public class WeatherDiaryTables {
         public static final String CREATE_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS "
                 + TABLE_NAME
                 + "("
-                + MARKER_ID + " TEXT PRIMARY KEY, "
+                + MARKER_ID + " TEXT, "
                 + PLACE_NAME + " TEXT, "
                 + LATITUDE + " TEXT, "
                 + LONGITUDE + " TEXT, "

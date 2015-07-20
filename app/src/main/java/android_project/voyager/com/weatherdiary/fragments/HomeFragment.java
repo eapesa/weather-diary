@@ -79,7 +79,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d("@@@HOME", "ON CREATE VIEW");
         View rootView = inflater.inflate(R.layout.weatherdiary_home_fragment, container, false);
 
         initializeViews(rootView);

@@ -3,8 +3,17 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
-        android:text="THIS SHOULD LOAD THE USER'S PREVIOUS FORECASTS :)"
-        android:paddingTop="40px"
+        android:text="Weather Forecast Diary"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:paddingTop="10dp"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    <ListView
+        android:id="@+id/weatherdiary_forecastdiary_listview"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></ListView>
 </LinearLayout>

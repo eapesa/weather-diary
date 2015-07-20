@@ -199,6 +199,7 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public boolean onMarkerClick(Marker marker) {
         manageMarkerDialog(marker);
+        Log.d("@@@ ON MARKER CLICK", "CLICKED || ID: " + marker.getId());
         return false;
     }
 

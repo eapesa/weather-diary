@@ -34,7 +34,7 @@ public class DailyForecastAdapter extends ArrayAdapter<Weather> {
         this.mTempType = tempType;
     }
 
-    static class ViewHolder {
+    private static class ViewHolder {
         public TextView forecastDay;
         public TextView forecastMonth;
         public TextView minTemp;

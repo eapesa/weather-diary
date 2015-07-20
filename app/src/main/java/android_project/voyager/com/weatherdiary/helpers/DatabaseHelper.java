@@ -31,9 +31,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(MarkedPlacesWeatherData.DROP_TABLE_QUERY);
-        db.execSQL(MarkedPlacesData.DROP_TABLE_QUERY);
-
         db.execSQL(MarkedPlacesWeatherData.CREATE_TABLE_QUERY);
         db.execSQL(MarkedPlacesData.CREATE_TABLE_QUERY);
     }

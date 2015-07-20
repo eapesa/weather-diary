@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.location.Location;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -121,7 +122,8 @@ public class MarkedPlacesWeatherDAO {
     }
 
     public MarkedPlace getSpecificMarkedPlace(String markerId) {
-        String[] columns = { MarkedPlacesData.PLACE_NAME,
+        String[] columns = { MarkedPlacesData.MARKER_ID,
+                MarkedPlacesData.PLACE_NAME,
                 MarkedPlacesData.LATITUDE,
                 MarkedPlacesData.LONGITUDE,
                 MarkedPlacesData.FORECAST_TIME };
@@ -153,12 +155,14 @@ public class MarkedPlacesWeatherDAO {
     public ArrayList<MarkedPlace> getAllMarkedPlaces() {
         ArrayList<MarkedPlace> markedPlaces = new ArrayList<>();
 
-        String[] columns = { MarkedPlacesData.PLACE_NAME,
+        String[] columns = { MarkedPlacesData.MARKER_ID,
+                MarkedPlacesData.PLACE_NAME,
                 MarkedPlacesData.LATITUDE,
                 MarkedPlacesData.LONGITUDE,
                 MarkedPlacesData.FORECAST_TIME };
 
         Cursor cursor = mDbHelper.query(MarkedPlacesData.TABLE_NAME, columns, null, null);
+        int markerId = cursor.getColumnIndex(MarkedPlacesData.MARKER_ID);
         int placeName = cursor.getColumnIndex(MarkedPlacesData.PLACE_NAME);
         int forecastTime = cursor.getColumnIndex(MarkedPlacesData.FORECAST_TIME);
         int latitude = cursor.getColumnIndex(MarkedPlacesData.LATITUDE);
@@ -166,6 +170,7 @@ public class MarkedPlacesWeatherDAO {
 
         while(cursor.moveToNext()) {
             MarkedPlace markedPlace = new MarkedPlace();
+            markedPlace.markerId = cursor.getString(markerId);
             markedPlace.nameOfPlace = cursor.getString(placeName);
             markedPlace.forecastTime = cursor.getString(forecastTime);
 
