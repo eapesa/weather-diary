@@ -5,8 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
+import android_project.voyager.com.weatherdiary.data.WeatherDiaryTables.MarkedPlacesData;
 import android_project.voyager.com.weatherdiary.data.WeatherDiaryTables.MarkedPlacesWeatherData;
 import android_project.voyager.com.weatherdiary.utils.Constants;
 
@@ -31,21 +31,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL(MarkedPlacesWeatherData.DROP_TABLE_QUERY);
+        db.execSQL(MarkedPlacesData.DROP_TABLE_QUERY);
+
         db.execSQL(MarkedPlacesWeatherData.CREATE_TABLE_QUERY);
+        db.execSQL(MarkedPlacesData.CREATE_TABLE_QUERY);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(MarkedPlacesWeatherData.DROP_TABLE_QUERY);
+        db.execSQL(MarkedPlacesData.DROP_TABLE_QUERY);
     }
 
-    public Cursor query(String[] columns, String[] selectionArgs) {
-        return db.query(MarkedPlacesWeatherData.TABLE_NAME, columns,
-                MarkedPlacesWeatherData.MARKER_ID + "=?", selectionArgs,
-                null, null, null);
+    public Cursor query(String table, String[] columns, String selection, String[] selectionArgs) {
+        return db.query(table, columns, selection, selectionArgs, null, null, null);
     }
 
     public void insert(String table, ContentValues contentValues) {
         db.insert(table, null, contentValues);
+    }
+
+    public void delete(String table, String where, String[] whereArgs) {
+        db.delete(table, where, whereArgs);
     }
 }

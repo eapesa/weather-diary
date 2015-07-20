@@ -3,12 +3,16 @@ package android_project.voyager.com.weatherdiary.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
+import android.location.Location;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
 import android_project.voyager.com.weatherdiary.data.WeatherDiaryTables.MarkedPlacesWeatherData;
+import android_project.voyager.com.weatherdiary.data.WeatherDiaryTables.MarkedPlacesData;
 import android_project.voyager.com.weatherdiary.helpers.DatabaseHelper;
+import android_project.voyager.com.weatherdiary.models.MarkedPlace;
 import android_project.voyager.com.weatherdiary.models.Weather;
 import android_project.voyager.com.weatherdiary.utils.Constants;
 
@@ -16,7 +20,6 @@ import android_project.voyager.com.weatherdiary.utils.Constants;
  * Created by eapesa on 7/16/15.
  */
 public class MarkedPlacesWeatherDAO {
-    private static final String TAG = MarkedPlacesWeatherDAO.class.getSimpleName();
     private Context mContext;
     private DatabaseHelper mDbHelper;
 
@@ -29,7 +32,8 @@ public class MarkedPlacesWeatherDAO {
         String[] columns = { MarkedPlacesWeatherData.MARKER_ID };
         String[] selectionArgs = { markerId };
 
-        Cursor cursor = mDbHelper.query(columns, selectionArgs);
+        Cursor cursor = mDbHelper.query(MarkedPlacesWeatherData.TABLE_NAME, columns,
+                MarkedPlacesWeatherData.MARKER_ID + "=?", selectionArgs);
         if ( cursor.getCount() < 1 ) {
             return false;
         } else {
@@ -49,7 +53,8 @@ public class MarkedPlacesWeatherDAO {
                 MarkedPlacesWeatherData.FORECAST_TIME };
         String[] selectionArgs = { markerId };
 
-        Cursor cursor = mDbHelper.query(columns, selectionArgs);
+        Cursor cursor = mDbHelper.query(MarkedPlacesWeatherData.TABLE_NAME, columns,
+                MarkedPlacesWeatherData.MARKER_ID + "=?", selectionArgs);
         Weather weather = new Weather();
         if (cursor.getCount() < 1) {
             weather = null;
@@ -107,4 +112,91 @@ public class MarkedPlacesWeatherDAO {
         mDbHelper.insert(MarkedPlacesWeatherData.TABLE_NAME, contentValues);
     }
 
+    public void deleteWeatherData(String markerId) {
+        for (int i = 0; i < Constants.FORECAST_DAY_COUNT; i++) {
+            String[] whereArgs = { markerId + "-" + i };
+            mDbHelper.delete(MarkedPlacesWeatherData.TABLE_NAME, MarkedPlacesWeatherData.MARKER_ID
+                    + "=?", whereArgs);
+        }
+    }
+
+    public MarkedPlace getSpecificMarkedPlace(String markerId) {
+        String[] columns = { MarkedPlacesData.PLACE_NAME,
+                MarkedPlacesData.LATITUDE,
+                MarkedPlacesData.LONGITUDE,
+                MarkedPlacesData.FORECAST_TIME };
+        String[] selectionArgs = { markerId };
+
+        Cursor cursor = mDbHelper.query(MarkedPlacesData.TABLE_NAME, columns,
+                MarkedPlacesData.MARKER_ID + "=?", selectionArgs);
+        MarkedPlace markedPlace = new MarkedPlace();
+        if (cursor.getCount() < 1) {
+            markedPlace = null;
+        } else {
+            cursor.moveToFirst();
+            markedPlace.markerId = markerId;
+            markedPlace.nameOfPlace = cursor.getString(cursor
+                    .getColumnIndex(MarkedPlacesData.PLACE_NAME));
+            markedPlace.forecastTime = cursor.getString(cursor
+                    .getColumnIndex(MarkedPlacesData.FORECAST_TIME));
+
+            Double latitude = Double.parseDouble(cursor.getString(cursor
+                            .getColumnIndex(MarkedPlacesData.LATITUDE)));
+            Double longitude = Double.parseDouble(cursor.getString(cursor
+                    .getColumnIndex(MarkedPlacesData.LONGITUDE)));
+            markedPlace.mapCoordinates = new LatLng(latitude, longitude);
+        }
+
+        return markedPlace;
+    }
+
+    public ArrayList<MarkedPlace> getAllMarkedPlaces() {
+        ArrayList<MarkedPlace> markedPlaces = new ArrayList<>();
+
+        String[] columns = { MarkedPlacesData.PLACE_NAME,
+                MarkedPlacesData.LATITUDE,
+                MarkedPlacesData.LONGITUDE,
+                MarkedPlacesData.FORECAST_TIME };
+
+        Cursor cursor = mDbHelper.query(MarkedPlacesData.TABLE_NAME, columns, null, null);
+        int placeName = cursor.getColumnIndex(MarkedPlacesData.PLACE_NAME);
+        int forecastTime = cursor.getColumnIndex(MarkedPlacesData.FORECAST_TIME);
+        int latitude = cursor.getColumnIndex(MarkedPlacesData.LATITUDE);
+        int longitude = cursor.getColumnIndex(MarkedPlacesData.LONGITUDE);
+
+        while(cursor.moveToNext()) {
+            MarkedPlace markedPlace = new MarkedPlace();
+            markedPlace.nameOfPlace = cursor.getString(placeName);
+            markedPlace.forecastTime = cursor.getString(forecastTime);
+
+            double latDouble = cursor.getDouble(latitude);
+            double longDouble = cursor.getDouble(longitude);
+            markedPlace.mapCoordinates = new LatLng(latDouble, longDouble);
+
+            markedPlaces.add(markedPlace);
+        }
+
+        return markedPlaces;
+    }
+
+    public void storeMarkedPlace(MarkedPlace markedPlace) {
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(MarkedPlacesData.MARKER_ID, markedPlace.markerId);
+        contentValues.put(MarkedPlacesData.PLACE_NAME, markedPlace.nameOfPlace);
+        contentValues.put(MarkedPlacesData.FORECAST_TIME, markedPlace.forecastTime);
+
+        String latitude = String.valueOf(markedPlace.mapCoordinates.latitude);
+        String longitude = String.valueOf(markedPlace.mapCoordinates.longitude);
+        contentValues.put(MarkedPlacesData.LATITUDE, latitude);
+        contentValues.put(MarkedPlacesData.LONGITUDE, longitude);
+
+        mDbHelper.insert(MarkedPlacesData.TABLE_NAME, contentValues);
+    }
+
+    public void deleteMarkedPlace(String markerId) {
+        String[] whereArgs = { markerId };
+        mDbHelper.delete(MarkedPlacesData.TABLE_NAME, MarkedPlacesData.MARKER_ID
+                + "=?", whereArgs);
+    }
 }

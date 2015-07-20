@@ -13,4 +13,15 @@
     <string name="weatherdiary_navdrawer_section3_label">View Forecasts</string>
     <string name="weatherdiary_progdialog_forecast_update_text">Updating weather forecast...</string>
 
+    <string name="weatherdiary_markplaces_alert_getforecast_title">Get Forecast</string>
+    <string name="weatherdiary_markplaces_alert_getforecast_message">Get forecast of the place?</string>
+    <string name="weatherdiary_markplaces_alert_getforecast_affbutton_label">Ok</string>
+    <string name="weatherdiary_markplaces_alert_getforecast_neutralbutton_label">Cancel</string>
+
+    <string name="weatherdiary_markplaces_alert_managemarker_title">Manage Marker</string>
+    <string name="weatherdiary_markplaces_alert_managemarker_message">Clicking Update button would
+        update the forecast. Otherwise, the marker and all data associated to it would be removed</string>
+    <string name="weatherdiary_markplaces_alert_managemarker_affbutton_label">Update</string>
+    <string name="weatherdiary_markplaces_alert_managemarker_neutralbutton_label">Delete</string>
+    <string name="weatherdiary_markplaces_alert_managemarker_negbutton_label">Cancel</string>
 </resources>

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +37,7 @@ public class ForecastApi {
 
     public interface ForecastApiListener {
         void onStartOfQuery();
-        void onProcessResult(ArrayList<Weather> weathers);
+        void onProcessResult(ArrayList<Weather> weathers, LatLng latLng);
     }
 
     public ForecastApi (Context context) {
@@ -140,7 +142,7 @@ public class ForecastApi {
 
         @Override
         protected void onPostExecute(ArrayList<Weather> weathers) {
-            mListener.onProcessResult(weathers);
+            mListener.onProcessResult(weathers, new LatLng(mLatitude, mLongitude));
         }
     }
 }

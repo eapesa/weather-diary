@@ -30,6 +30,7 @@ import android_project.voyager.com.weatherdiary.activities.MarkedPlaceForecastAc
 import android_project.voyager.com.weatherdiary.dao.MarkedPlacesWeatherDAO;
 import android_project.voyager.com.weatherdiary.interfaces.ForecastApi;
 import android_project.voyager.com.weatherdiary.interfaces.WeatherApi;
+import android_project.voyager.com.weatherdiary.models.MarkedPlace;
 import android_project.voyager.com.weatherdiary.models.Weather;
 import android_project.voyager.com.weatherdiary.utils.Constants;
 
@@ -51,7 +52,7 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
 
     private double mLatitude;
     private double mLongitude;
-    private MarkerOptions mCurrentMarker;
+    private Marker mCurrentMarker;
 
     public static MarkPlacesFragment newInstance() {
         MarkPlacesFragment fragment = new MarkPlacesFragment();
@@ -103,41 +104,73 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
+    private void reloadMarkers(GoogleMap googleMap) {
+        ArrayList<MarkedPlace> markedPlaces = mWeatherDAO.getAllMarkedPlaces();
+        for (int i = 0; i < markedPlaces.size(); i++) {
+            MarkedPlace marked = markedPlaces.get(i);
+            MarkerOptions markerOptions = new MarkerOptions();
+
+            markerOptions.position(marked.mapCoordinates)
+                    .title(marked.nameOfPlace);
+            googleMap.addMarker(markerOptions);
+        }
+    }
+
     /*
      * Custom Methods
      */
-    private Bundle putInBundle(Weather weather) {
-        Bundle bundle = new Bundle();
-
-        bundle.putString(Constants.ARGS_PLACENAME, weather.nameOfPlace);
-        bundle.putString(Constants.ARGS_CELSIUS, weather.celsiusTemp);
-        bundle.putString(Constants.ARGS_FAHRENHEIT, weather.fahrenheitTemp);
-        bundle.putString(Constants.ARGS_WINDSPEED, weather.windSpeed);
-        bundle.putString(Constants.ARGS_CLOUDINESS, weather.cloudiness);
-        bundle.putString(Constants.ARGS_FORECAST_TIME, weather.forecastTime);
-
-        return bundle;
-    }
-
     private void getForecastDialog(final MarkerOptions mapMarker, final LatLng point) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         final AlertDialog dialog = dialogBuilder
-                .setTitle(Constants.ALERT_FORECAST_TITLE)
-                .setMessage(Constants.ALERT_FORECAST_MESSAGE)
-                .setPositiveButton(Constants.ALERT_FORECAST_AFFIRMATIVE_BUTTON_LABEL, new DialogInterface.OnClickListener() {
+                .setTitle(getString(R.string.weatherdiary_markplaces_alert_getforecast_title))
+                .setMessage(getString(R.string.weatherdiary_markplaces_alert_getforecast_message))
+                .setPositiveButton(getString(R.string.weatherdiary_markplaces_alert_getforecast_affbutton_label),
+                        new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mForecastApi.getForecast(MarkPlacesFragment.this, point.latitude,
                                 point.longitude);
-                        mGoogleMap.addMarker(mapMarker);
+                        mCurrentMarker = mGoogleMap.addMarker(mapMarker);
                     }
                 })
-                .setNeutralButton(Constants.ALERT_FORECAST_NEGATIVE_BUTTON_LABEL, new DialogInterface.OnClickListener() {
+                .setNeutralButton(getString(R.string.weatherdiary_markplaces_alert_getforecast_neutralbutton_label),
+                        new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 }).create();
+        dialog.show();
+    }
+
+    private void manageMarkerDialog(final Marker marker) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        final AlertDialog dialog = dialogBuilder
+                .setTitle(getString(R.string.weatherdiary_markplaces_alert_managemarker_title))
+                .setMessage(getString(R.string.weatherdiary_markplaces_alert_managemarker_message))
+                .setPositiveButton(getString(R.string.weatherdiary_markplaces_alert_managemarker_affbutton_label),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.d("@@@ MARKER UPDATE", "Should update data here :D");
+                            }
+                        })
+                .setNeutralButton(getString(R.string.weatherdiary_markplaces_alert_managemarker_neutralbutton_label),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mWeatherDAO.deleteWeatherData(marker.getId());
+                                mWeatherDAO.deleteMarkedPlace(marker.getId());
+                                marker.remove();
+                            }
+                        })
+                .setNegativeButton(getString(R.string.weatherdiary_markplaces_alert_managemarker_negbutton_label),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        }).create();
         dialog.show();
     }
 
@@ -147,29 +180,25 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.mGoogleMap = googleMap;
+        reloadMarkers(googleMap);
 
         LatLng currentLatLng = new LatLng(mLatitude, mLongitude);
-        String placeLabel = mSharedPrefs.getString(Constants.ARGS_PLACENAME,
-                Constants.DEFAULT_PLACENAME_VALUE);
-
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng,
                 Constants.DEFAULT_ZOOM_VALUE));
-        MarkerOptions mapMarker = new MarkerOptions().position(currentLatLng).title(placeLabel);
-        Marker currentPlaceMarker = googleMap.addMarker(mapMarker);
-
+        googleMap.setOnMarkerClickListener(this);
         googleMap.setOnMapClickListener(this);
     }
 
     @Override
     public void onMapClick(LatLng latLng) {
         MarkerOptions mapMarker = new MarkerOptions().position(
-                new LatLng(latLng.latitude, latLng.longitude)).title("New Place");
-        mCurrentMarker = mapMarker;
+                new LatLng(latLng.latitude, latLng.longitude));
         getForecastDialog(mapMarker, latLng);
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+        manageMarkerDialog(marker);
         return false;
     }
 
@@ -182,19 +211,28 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void onProcessResult(ArrayList<Weather> weathers) {
+    public void onProcessResult(ArrayList<Weather> weathers, LatLng latLng) {
         mProgressDialogUpdate.hide();
+
         String nameOfPlace = weathers.get(0).nameOfPlace;
         String forecastTime = weathers.get(0).forecastTime;
 
+        mCurrentMarker.setTitle(nameOfPlace);
         for (int i = 0; i < weathers.size(); i++) {
             Weather weather = weathers.get(i);
-            mWeatherDAO.storeWeatherData(mCurrentMarker.toString() + "-" + i, weather);
+            mWeatherDAO.storeWeatherData(mCurrentMarker.getId() + "-" + i, weather);
         }
+
+        MarkedPlace markedPlace = new MarkedPlace();
+        markedPlace.markerId = mCurrentMarker.getId();
+        markedPlace.mapCoordinates = latLng;
+        markedPlace.nameOfPlace = nameOfPlace;
+        markedPlace.forecastTime = forecastTime;
+        mWeatherDAO.storeMarkedPlace(markedPlace);
 
         Intent intent = new Intent(getActivity().getApplicationContext(),
                 MarkedPlaceForecastActivity.class);
-        intent.putExtra(Constants.ARGS_MARKER, mCurrentMarker.toString());
+        intent.putExtra(Constants.ARGS_MARKER, mCurrentMarker.getId());
         intent.putExtra(Constants.ARGS_PLACENAME, nameOfPlace);
         intent.putExtra(Constants.ARGS_FORECAST_TIME, forecastTime);
         startActivity(intent);
