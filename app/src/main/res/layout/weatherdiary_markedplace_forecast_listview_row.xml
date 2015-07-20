@@ -7,7 +7,6 @@
     <LinearLayout
         android:weightSum="1"
         android:orientation="horizontal"
-        android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -17,6 +16,7 @@
             android:weightSum="1"
             android:layout_gravity="center"
             android:gravity="center"
+            android:layout_marginLeft="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
@@ -48,8 +48,8 @@
             android:weightSum="1"
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
@@ -57,7 +57,6 @@
                 android:layout_weight="0.45"
                 android:text="32 C"
                 android:textSize="24sp"
-                android:textStyle="bold"
                 android:textColor="@android:color/holo_red_dark"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -67,7 +66,6 @@
                 android:layout_weight="0.45"
                 android:text="30 C"
                 android:textSize="24sp"
-                android:textStyle="bold"
                 android:textColor="@android:color/holo_blue_dark"
                 android:gravity="center"
                 android:layout_width="wrap_content"
@@ -87,7 +85,6 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
@@ -96,7 +93,6 @@
                 android:text="Wind Speed: 0.61 m/s"
                 android:textSize="14sp"
                 android:gravity="center"
-                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
@@ -105,7 +101,6 @@
                 android:text="Cloudiness percentage: 32%"
                 android:textSize="14sp"
                 android:gravity="center"
-                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>

@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
     <ImageView
         android:src="@drawable/weatherdiary_sample_weather_icon"
-        android:paddingTop="10dp"
+        android:layout_marginTop="28dp"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -13,6 +13,8 @@
         android:id="@+id/weatherdiary_home_updateforecast_button"
         android:text="Get Weather Forecast"
         android:textSize="16sp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
