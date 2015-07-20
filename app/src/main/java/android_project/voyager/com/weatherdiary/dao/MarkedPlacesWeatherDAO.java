@@ -121,6 +121,34 @@ public class MarkedPlacesWeatherDAO {
         }
     }
 
+    public void updateWeatherData(String markerId, Weather weather) {
+        String where = MarkedPlacesWeatherData.MARKER_ID + "=?";
+        String[] whereArgs = { markerId };
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MarkedPlacesWeatherData.MONTH, weather.month);
+        contentValues.put(MarkedPlacesWeatherData.DAY, weather.day);
+        contentValues.put(MarkedPlacesWeatherData.MIN_TEMP, weather.minTemp);
+        contentValues.put(MarkedPlacesWeatherData.MAX_TEMP, weather.maxTemp);
+        contentValues.put(MarkedPlacesWeatherData.WIND_SPEED, weather.windSpeed);
+        contentValues.put(MarkedPlacesWeatherData.CLOUDINESS, weather.cloudiness);
+        contentValues.put(MarkedPlacesWeatherData.FORECAST_DESCRIPTION, weather.forecastDescription);
+        contentValues.put(MarkedPlacesWeatherData.FORECAST_TIME, weather.forecastTime);
+        mDbHelper.update(MarkedPlacesWeatherData.TABLE_NAME, where, whereArgs, contentValues);
+    }
+
+    public boolean checkMarkedPlaceIfExists(String markerId) {
+        String[] columns = { MarkedPlacesData.MARKER_ID };
+        String[] selectionArgs = { markerId };
+
+        Cursor cursor = mDbHelper.query(MarkedPlacesData.TABLE_NAME, columns,
+                MarkedPlacesData.MARKER_ID + "=?", selectionArgs);
+        if ( cursor.getCount() < 1 ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public MarkedPlace getSpecificMarkedPlace(String markerId) {
         String[] columns = { MarkedPlacesData.MARKER_ID,
                 MarkedPlacesData.PLACE_NAME,
@@ -203,5 +231,13 @@ public class MarkedPlacesWeatherDAO {
         String[] whereArgs = { markerId };
         mDbHelper.delete(MarkedPlacesData.TABLE_NAME, MarkedPlacesData.MARKER_ID
                 + "=?", whereArgs);
+    }
+
+    public void updateMarkedPlace(String markerId, MarkedPlace markedPlace) {
+        String where = MarkedPlacesData.MARKER_ID + "=?";
+        String[] whereArgs = { markerId };
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MarkedPlacesData.FORECAST_TIME, markedPlace.forecastTime);
+        mDbHelper.update(MarkedPlacesData.TABLE_NAME, where, whereArgs, contentValues);
     }
 }

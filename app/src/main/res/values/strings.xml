@@ -20,7 +20,7 @@
 
     <string name="weatherdiary_markplaces_alert_managemarker_title">Manage Marker</string>
     <string name="weatherdiary_markplaces_alert_managemarker_message">Clicking Update button would
-        update the forecast. Otherwise, the marker and all data associated to it would be removed</string>
+        update the forecast. Otherwise, the marker and all data associated to it will be removed.</string>
     <string name="weatherdiary_markplaces_alert_managemarker_affbutton_label">Update</string>
     <string name="weatherdiary_markplaces_alert_managemarker_neutralbutton_label">Delete</string>
     <string name="weatherdiary_markplaces_alert_managemarker_negbutton_label">Cancel</string>

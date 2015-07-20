@@ -152,7 +152,10 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Log.d("@@@ MARKER UPDATE", "Should update data here :D");
+                                mForecastApi.getForecast(MarkPlacesFragment.this,
+                                        marker.getPosition().latitude,
+                                        marker.getPosition().longitude);
+                                mCurrentMarker = marker;
                             }
                         })
                 .setNeutralButton(getString(R.string.weatherdiary_markplaces_alert_managemarker_neutralbutton_label),
@@ -199,7 +202,6 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public boolean onMarkerClick(Marker marker) {
         manageMarkerDialog(marker);
-        Log.d("@@@ ON MARKER CLICK", "CLICKED || ID: " + marker.getId());
         return false;
     }
 
@@ -218,10 +220,15 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
         String nameOfPlace = weathers.get(0).nameOfPlace;
         String forecastTime = weathers.get(0).forecastTime;
 
-        mCurrentMarker.setTitle(nameOfPlace);
         for (int i = 0; i < weathers.size(); i++) {
             Weather weather = weathers.get(i);
-            mWeatherDAO.storeWeatherData(mCurrentMarker.getId() + "-" + i, weather);
+            String markerId = mCurrentMarker.getId() + "-" + i;
+            if (mWeatherDAO.checkMarkerIfExists(markerId)) {
+                mWeatherDAO.updateWeatherData(markerId, weather);
+            } else {
+                mCurrentMarker.setTitle(nameOfPlace);
+                mWeatherDAO.storeWeatherData(markerId, weather);
+            }
         }
 
         MarkedPlace markedPlace = new MarkedPlace();
@@ -229,7 +236,12 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
         markedPlace.mapCoordinates = latLng;
         markedPlace.nameOfPlace = nameOfPlace;
         markedPlace.forecastTime = forecastTime;
-        mWeatherDAO.storeMarkedPlace(markedPlace);
+
+        if (mWeatherDAO.checkMarkedPlaceIfExists(mCurrentMarker.getId())) {
+            mWeatherDAO.updateMarkedPlace(mCurrentMarker.getId(), markedPlace);
+        } else {
+            mWeatherDAO.storeMarkedPlace(markedPlace);
+        }
 
         Intent intent = new Intent(getActivity().getApplicationContext(),
                 MarkedPlaceForecastActivity.class);

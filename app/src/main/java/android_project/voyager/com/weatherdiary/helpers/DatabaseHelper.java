@@ -52,4 +52,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void delete(String table, String where, String[] whereArgs) {
         db.delete(table, where, whereArgs);
     }
+
+    public void update(String table, String where, String[] whereArgs, ContentValues contentValues) {
+        db.update(table, contentValues, where, whereArgs);
+    }
 }
