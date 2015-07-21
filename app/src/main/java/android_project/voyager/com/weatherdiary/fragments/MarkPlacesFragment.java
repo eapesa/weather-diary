@@ -43,7 +43,6 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
     private GoogleMap mGoogleMap;
 
     SharedPreferences mSharedPrefs;
-    SharedPreferences.Editor mSharedPrefsEditor;
     private ProgressDialog mProgressDialogUpdate;
     private ForecastApi mForecastApi;
     private MarkedPlacesWeatherDAO mWeatherDAO;

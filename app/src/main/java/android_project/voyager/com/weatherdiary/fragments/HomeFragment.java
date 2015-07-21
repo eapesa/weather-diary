@@ -46,7 +46,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
     private TextView mTextViewCloudiness;
     private TextView mTextViewWind;
     private TextView mTextViewTime;
-    private ImageView mWeatherStatus;
+    private ImageView mWeatherLogo;
 
     private SharedPreferences mSharedPrefs;
     private SharedPreferences.Editor mSharedPrefsEditor;
@@ -56,6 +56,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
     private String cloudiness;
     private String windSpeed;
     private String forecastTime;
+    private String weatherLogoCode;
 
     private Context mContext;
     private Criteria mCriteria;
@@ -105,6 +106,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
                 (Constants.ARGS_WINDSPEED, Constants.DEFAULT_WEATHER_VALUES);
         forecastTime = mSharedPrefs.getString
                 (Constants.ARGS_FORECAST_TIME, "Forecast since " + Constants.DEFAULT_WEATHER_VALUES);
+        weatherLogoCode = mSharedPrefs.getString
+                (Constants.ARGS_ICON, Constants.DEFAULT_WEATHER_LOGO);
     }
 
     private void initializeViews(View view) {
@@ -120,7 +123,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
                 (R.id.weatherdiary_home_wind_textview);
         mTextViewTime = (TextView) view.findViewById
                 (R.id.weatherdiary_home_forecasttime_textview);
-        mWeatherStatus = (ImageView) view.findViewById
+        mWeatherLogo = (ImageView) view.findViewById
                 (R.id.weatherdiary_home_weather_icon);
 
         mTextViewPlaceName.setText(placeName);
@@ -129,6 +132,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
         mTextViewCloudiness.setText(cloudiness);
         mTextViewWind.setText(windSpeed);
         mTextViewTime.setText(forecastTime);
+        mWeatherLogo.setImageResource(Utilities.getLargeImageResourceFromCode
+                (mContext, weatherLogoCode));
 
         mButtonUpdate = (Button) view.findViewById
                 (R.id.weatherdiary_home_updateforecast_button);
@@ -237,7 +242,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
         mTextViewCloudiness.setText(weather.cloudiness);
         mTextViewWind.setText(weather.windSpeed);
         mTextViewTime.setText(weather.forecastTime);
-        mWeatherStatus.setImageResource(Utilities.getImageResourceFromCode
+        mWeatherLogo.setImageResource(Utilities.getLargeImageResourceFromCode
                 (mContext, weather.iconCode));
     }
 }

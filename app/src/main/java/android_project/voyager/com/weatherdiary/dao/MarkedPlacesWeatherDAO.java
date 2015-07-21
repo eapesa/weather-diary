@@ -49,7 +49,8 @@ public class MarkedPlacesWeatherDAO {
                 MarkedPlacesWeatherData.WIND_SPEED,
                 MarkedPlacesWeatherData.CLOUDINESS,
                 MarkedPlacesWeatherData.FORECAST_DESCRIPTION,
-                MarkedPlacesWeatherData.FORECAST_TIME };
+                MarkedPlacesWeatherData.FORECAST_TIME,
+                MarkedPlacesWeatherData.ICON_CODE };
         String[] selectionArgs = { markerId };
 
         Cursor cursor = mDbHelper.query(MarkedPlacesWeatherData.TABLE_NAME, columns,
@@ -77,6 +78,8 @@ public class MarkedPlacesWeatherDAO {
                     .getColumnIndex(MarkedPlacesWeatherData.FORECAST_DESCRIPTION));
             weather.forecastTime = cursor.getString(cursor
                     .getColumnIndex(MarkedPlacesWeatherData.FORECAST_TIME));
+            weather.iconCode = cursor.getString(cursor
+                    .getColumnIndex(MarkedPlacesWeatherData.ICON_CODE));
         }
 
         return weather;
@@ -107,6 +110,7 @@ public class MarkedPlacesWeatherDAO {
         contentValues.put(MarkedPlacesWeatherData.CLOUDINESS, weather.cloudiness);
         contentValues.put(MarkedPlacesWeatherData.FORECAST_DESCRIPTION, weather.forecastDescription);
         contentValues.put(MarkedPlacesWeatherData.FORECAST_TIME, weather.forecastTime);
+        contentValues.put(MarkedPlacesWeatherData.ICON_CODE, weather.iconCode);
 
         mDbHelper.insert(MarkedPlacesWeatherData.TABLE_NAME, contentValues);
     }
@@ -131,6 +135,7 @@ public class MarkedPlacesWeatherDAO {
         contentValues.put(MarkedPlacesWeatherData.CLOUDINESS, weather.cloudiness);
         contentValues.put(MarkedPlacesWeatherData.FORECAST_DESCRIPTION, weather.forecastDescription);
         contentValues.put(MarkedPlacesWeatherData.FORECAST_TIME, weather.forecastTime);
+        contentValues.put(MarkedPlacesWeatherData.ICON_CODE, weather.iconCode);
         mDbHelper.update(MarkedPlacesWeatherData.TABLE_NAME, where, whereArgs, contentValues);
     }
 

@@ -39,6 +39,7 @@ public class WeatherDiaryTables {
         public static final String CLOUDINESS = "cloudiness";
         public static final String FORECAST_DESCRIPTION = "forecast_description";
         public static final String FORECAST_TIME = "forecast_time";
+        public static final String ICON_CODE = "weather_icon_code";
 
         public static final String CREATE_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS "
                 + TABLE_NAME
@@ -52,7 +53,8 @@ public class WeatherDiaryTables {
                 + WIND_SPEED + " TEXT, "
                 + CLOUDINESS + " TEXT, "
                 + FORECAST_DESCRIPTION + " TEXT, "
-                + FORECAST_TIME + " TEXT "
+                + FORECAST_TIME + " TEXT, "
+                + ICON_CODE + " TEXT "
                 + ")";
     }
 }

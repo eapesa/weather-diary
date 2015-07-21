@@ -90,6 +90,8 @@ public class ForecastApi {
             weather.forecastDescription = forecast.getJSONArray("weather")
                     .getJSONObject(0).getString("description");
             weather.cloudiness = "Cloudiness percentage: " + forecast.getString("clouds") + "%";
+            weather.iconCode = forecast.getJSONArray("weather")
+                    .getJSONObject(0).getString("icon");
 
             weatherArray.add(weather);
         }

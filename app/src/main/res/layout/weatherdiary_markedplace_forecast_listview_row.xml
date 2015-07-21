@@ -2,12 +2,16 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:layout_gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
         android:weightSum="1"
         android:orientation="horizontal"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
@@ -16,7 +20,6 @@
             android:weightSum="1"
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_marginLeft="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
@@ -48,31 +51,46 @@
             android:weightSum="1"
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/weatherdiary_markedplace_forecast_listview_maxTemp_textview"
                 android:layout_weight="0.45"
                 android:text="32 C"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textColor="@android:color/holo_red_dark"
                 android:gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp" />
+                android:layout_height="26dp" />
             <TextView
                 android:id="@+id/weatherdiary_markedplace_forecast_listview_minTemp_textview"
                 android:layout_weight="0.45"
                 android:text="30 C"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textColor="@android:color/holo_blue_dark"
                 android:gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp" />
+                android:layout_height="26dp" />
         </LinearLayout>
         <LinearLayout
-            android:layout_weight="0.8"
+            android:layout_weight="0.1"
+            android:orientation="vertical"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/weatherdiary_markedplace_forecast_listview_logo_imageview"
+                android:src="@drawable/weather_icon_s"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="0.7"
             android:weightSum="1"
             android:orientation="vertical"
             android:layout_gravity="center"

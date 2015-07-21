@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
     <ImageView
         android:id="@+id/weatherdiary_home_weather_icon"
-        android:src="@drawable/weather_icon"
+        android:src="@drawable/weather_icon_l"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"
         android:layout_gravity="center"

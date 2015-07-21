@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ public class MarkedPlaceForecastActivity extends Activity implements
     private TextView mPlaceNameTextView;
     private TextView mForecastTimeTextView;
     private ListView mForecastListView;
+    private ImageView mWeatherLogo;
     private DailyForecastAdapter dailyForecastAdapter;
     private MarkedPlacesWeatherDAO weatherDAO;
     private String mCurrentMarker;

@@ -1,11 +1,7 @@
 package android_project.voyager.com.weatherdiary.helpers;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
-import android_project.voyager.com.weatherdiary.R;
 import android_project.voyager.com.weatherdiary.utils.Constants;
 
 /**
@@ -34,34 +30,68 @@ public class Utilities {
         return String.valueOf(celsiusTemp) + Constants.CELSIUS_UNIT;
     }
 
+    public static int getLargeImageResourceFromCode(Context context, String code) {
+        int resourceId = 0;
+        if ( code.equalsIgnoreCase("01d") || code.equalsIgnoreCase("01n") ) {
+            resourceId = context.getResources().getIdentifier("clear_l",
+                    "drawable", context.getPackageName());
+        } else if ( code.equalsIgnoreCase("02d") || code.equalsIgnoreCase("02n") ) {
+            resourceId = context.getResources().getIdentifier("few_clouds_l",
+                    "drawable", context.getPackageName());
+        } else if ( code.equalsIgnoreCase("03d") || code.equalsIgnoreCase("03n") ) {
+            resourceId = context.getResources().getIdentifier("scattered_clouds_l",
+                    "drawable", context.getPackageName());
+        } else if ( code.equalsIgnoreCase("04d") || code.equalsIgnoreCase("04n") ) {
+            resourceId = context.getResources().getIdentifier("broken_clouds_l",
+                    "drawable", context.getPackageName());
+        } else if ( code.equalsIgnoreCase("09d") || code.equalsIgnoreCase("09n") ) {
+            resourceId = context.getResources().getIdentifier("shower_rain_l",
+                    "drawable", context.getPackageName());
+        } else if ( code.equalsIgnoreCase("10d") || code.equalsIgnoreCase("10n") ) {
+            resourceId = context.getResources().getIdentifier("rain_l",
+                    "drawable", context.getPackageName());
+        } else if ( code.equalsIgnoreCase("11d") || code.equalsIgnoreCase("11n") ) {
+            resourceId = context.getResources().getIdentifier("thunderstorm_l",
+                    "drawable", context.getPackageName());
+        } else if ( code.equalsIgnoreCase("13d") || code.equalsIgnoreCase("13n") ) {
+            resourceId = context.getResources().getIdentifier("snow_l",
+                    "drawable", context.getPackageName());
+        } else {
+            resourceId = context.getResources().getIdentifier("weather_icon_l",
+                    "drawable", context.getPackageName());
+        }
+
+        return resourceId;
+    }
+
     public static int getImageResourceFromCode(Context context, String code) {
         int resourceId = 0;
         if ( code.equalsIgnoreCase("01d") || code.equalsIgnoreCase("01n") ) {
-            resourceId = context.getResources().getIdentifier("clear",
+            resourceId = context.getResources().getIdentifier("clear_s",
                     "drawable", context.getPackageName());
         } else if ( code.equalsIgnoreCase("02d") || code.equalsIgnoreCase("02n") ) {
-            resourceId = context.getResources().getIdentifier("fewclouds",
+            resourceId = context.getResources().getIdentifier("few_clouds_s",
                     "drawable", context.getPackageName());
         } else if ( code.equalsIgnoreCase("03d") || code.equalsIgnoreCase("03n") ) {
-            resourceId = context.getResources().getIdentifier("scatteredclouds",
+            resourceId = context.getResources().getIdentifier("scattered_clouds_s",
                     "drawable", context.getPackageName());
         } else if ( code.equalsIgnoreCase("04d") || code.equalsIgnoreCase("04n") ) {
-            resourceId = context.getResources().getIdentifier("brokenclouds",
+            resourceId = context.getResources().getIdentifier("broken_clouds_s",
                     "drawable", context.getPackageName());
         } else if ( code.equalsIgnoreCase("09d") || code.equalsIgnoreCase("09n") ) {
-            resourceId = context.getResources().getIdentifier("showerrain",
+            resourceId = context.getResources().getIdentifier("shower_rain_s",
                     "drawable", context.getPackageName());
         } else if ( code.equalsIgnoreCase("10d") || code.equalsIgnoreCase("10n") ) {
-            resourceId = context.getResources().getIdentifier("rain",
+            resourceId = context.getResources().getIdentifier("rain_s",
                     "drawable", context.getPackageName());
         } else if ( code.equalsIgnoreCase("11d") || code.equalsIgnoreCase("11n") ) {
-            resourceId = context.getResources().getIdentifier("thunderstorm",
+            resourceId = context.getResources().getIdentifier("thunderstorm_s",
                     "drawable", context.getPackageName());
         } else if ( code.equalsIgnoreCase("13d") || code.equalsIgnoreCase("13n") ) {
-            resourceId = context.getResources().getIdentifier("snow",
+            resourceId = context.getResources().getIdentifier("snow_s",
                     "drawable", context.getPackageName());
         } else {
-            resourceId = context.getResources().getIdentifier("weather_icon",
+            resourceId = context.getResources().getIdentifier("weather_icon_s",
                     "drawable", context.getPackageName());
         }
 

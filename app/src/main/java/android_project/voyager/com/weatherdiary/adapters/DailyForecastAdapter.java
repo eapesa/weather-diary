@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,6 +41,7 @@ public class DailyForecastAdapter extends ArrayAdapter<Weather> {
         public TextView description;
         public TextView windSpeed;
         public TextView cloudiness;
+        public ImageView weatherLogo;
     }
 
     public void changeTempUnit() {
@@ -69,6 +71,8 @@ public class DailyForecastAdapter extends ArrayAdapter<Weather> {
                     (R.id.weatherdiary_markedplace_forecast_listview_windSpeed_textview);
             viewHolder.cloudiness = (TextView) view.findViewById
                     (R.id.weatherdiary_markedplace_forecast_listview_cloudiness_textview);
+            viewHolder.weatherLogo = (ImageView) view.findViewById
+                    (R.id.weatherdiary_markedplace_forecast_listview_logo_imageview);
 
             view.setTag(viewHolder);
         } else {
@@ -97,6 +101,8 @@ public class DailyForecastAdapter extends ArrayAdapter<Weather> {
         vHolder.description.setText(weather.forecastDescription);
         vHolder.windSpeed.setText(weather.windSpeed);
         vHolder.cloudiness.setText(weather.cloudiness);
+        vHolder.weatherLogo.setImageResource(Utilities.getImageResourceFromCode
+                (mContext, weather.iconCode));
 
         return view;
     }
