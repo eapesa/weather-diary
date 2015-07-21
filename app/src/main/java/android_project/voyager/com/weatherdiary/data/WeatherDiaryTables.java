@@ -1,7 +1,5 @@
 package android_project.voyager.com.weatherdiary.data;
 
-import android.provider.BaseColumns;
-
 /**
  * Created by eapesa on 7/16/15.
  */

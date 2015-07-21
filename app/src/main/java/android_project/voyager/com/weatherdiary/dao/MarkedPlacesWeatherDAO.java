@@ -3,15 +3,13 @@ package android_project.voyager.com.weatherdiary.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.location.Location;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
-import android_project.voyager.com.weatherdiary.data.WeatherDiaryTables.MarkedPlacesWeatherData;
 import android_project.voyager.com.weatherdiary.data.WeatherDiaryTables.MarkedPlacesData;
+import android_project.voyager.com.weatherdiary.data.WeatherDiaryTables.MarkedPlacesWeatherData;
 import android_project.voyager.com.weatherdiary.helpers.DatabaseHelper;
 import android_project.voyager.com.weatherdiary.models.MarkedPlace;
 import android_project.voyager.com.weatherdiary.models.Weather;

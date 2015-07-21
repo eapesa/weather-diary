@@ -1,11 +1,11 @@
 package android_project.voyager.com.weatherdiary.fragments;
 
 //import android.app.Fragment;
+
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +23,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import android_project.voyager.com.weatherdiary.R;
+import android_project.voyager.com.weatherdiary.activities.MainActivity;
 import android_project.voyager.com.weatherdiary.interfaces.WeatherApi;
 import android_project.voyager.com.weatherdiary.models.Weather;
 import android_project.voyager.com.weatherdiary.utils.Constants;
 import android_project.voyager.com.weatherdiary.utils.Toasts;
 
-import static android_project.voyager.com.weatherdiary.interfaces.WeatherApi.*;
+import static android_project.voyager.com.weatherdiary.interfaces.WeatherApi.WeatherApiListener;
 
 /**
  * Created by eapesa on 7/13/15.
@@ -72,8 +74,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.mContext = activity;
-        initializeHelpers();
-        loadTexts();
     }
 
     @Nullable
@@ -81,6 +81,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.weatherdiary_home_fragment, container, false);
 
+        initializeHelpers();
+        loadTexts();
         initializeViews(rootView);
 
         return rootView;
@@ -130,7 +132,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
         mButtonUpdate.setOnClickListener(this);
 
         mProgressDialogUpdate = new ProgressDialog(getActivity());
-//        mProgressDialogUpdate.setMessage(Labels.HOME_UPDATE_FORECAST);
         mProgressDialogUpdate.setMessage(getString
                 (R.string.weatherdiary_progdialog_forecast_update_text));
     }
@@ -161,11 +162,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
             case R.id.weatherdiary_home_updateforecast_button:
                 if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     Location currentLoc = mLocationManager.getLastKnownLocation(mProvider);
+
                     mSharedPrefsEditor.putString(Constants.ARGS_LATITUDE,
                             String.valueOf(currentLoc.getLatitude()));
                     mSharedPrefsEditor.putString(Constants.ARGS_LONGITUDE,
                             String.valueOf(currentLoc.getLongitude()));
                     mSharedPrefsEditor.commit();
+
+                    String lat = mSharedPrefs.getString(Constants.ARGS_LATITUDE,
+                            Constants.DEFAULT_LAT_VALUE);
+                    String lon = mSharedPrefs.getString(Constants.ARGS_LONGITUDE,
+                            Constants.DEFAULT_LAT_VALUE);
+
                     weatherApi.getWeatherForecast(HomeFragment.this, currentLoc.getLatitude(),
                             currentLoc.getLongitude());
                 } else {
@@ -208,7 +216,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
 
     @Override
     public void onUpdateViews(Weather weather) {
-        mProgressDialogUpdate.hide();
+        mProgressDialogUpdate.dismiss();
 
         mSharedPrefsEditor.putString(Constants.ARGS_PLACENAME, weather.nameOfPlace);
         mSharedPrefsEditor.putString(Constants.ARGS_CELSIUS, weather.celsiusTemp);

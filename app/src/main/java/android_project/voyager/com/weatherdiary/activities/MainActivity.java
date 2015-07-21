@@ -1,4 +1,4 @@
-package android_project.voyager.com.weatherdiary;
+package android_project.voyager.com.weatherdiary.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -7,17 +7,19 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.os.Looper;
 import android.support.v4.app.FragmentManager;
-import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.support.v4.widget.DrawerLayout;
 import android.widget.Toast;
 
+import android_project.voyager.com.weatherdiary.R;
 import android_project.voyager.com.weatherdiary.fragments.ForecastDiaryFragment;
-import android_project.voyager.com.weatherdiary.fragments.MarkPlacesFragment;
 import android_project.voyager.com.weatherdiary.fragments.HomeFragment;
+import android_project.voyager.com.weatherdiary.fragments.MarkPlacesFragment;
+import android_project.voyager.com.weatherdiary.fragments.NavigationDrawerFragment;
 import android_project.voyager.com.weatherdiary.interfaces.WeatherApi;
 import android_project.voyager.com.weatherdiary.models.Weather;
 import android_project.voyager.com.weatherdiary.utils.Constants;
@@ -32,7 +34,6 @@ public class MainActivity extends AppCompatActivity
     private ProgressDialog mForecastUpdate;
     private SharedPreferences mSharedPrefs;
     private SharedPreferences.Editor mSharedPrefsEditor;
-//    private DatabaseHelper mDBHelper;
     private WeatherApi mWeatherApi;
     private Criteria mCriteria;
     private LocationManager mLocationManager;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.weatherdiary_main_activity);
 
         initializeHelpers();
         initializeForecast();
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
     }
+
     /*
      * Navigation Drawer Methods
      */
@@ -158,7 +160,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onUpdateViews(Weather weather) {
-        mForecastUpdate.hide();
+        mForecastUpdate.dismiss();
         mWeather = weather;
         mWeather.mapCoordinates = mCurrentLocation;
 

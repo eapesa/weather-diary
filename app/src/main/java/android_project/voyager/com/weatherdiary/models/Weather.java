@@ -2,8 +2,6 @@ package android_project.voyager.com.weatherdiary.models;
 
 import android.location.Location;
 
-import android_project.voyager.com.weatherdiary.utils.Constants;
-
 /**
  * Created by eapesa on 7/15/15.
  */

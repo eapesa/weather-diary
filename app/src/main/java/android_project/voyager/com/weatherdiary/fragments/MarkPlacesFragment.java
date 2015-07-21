@@ -6,10 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +29,6 @@ import android_project.voyager.com.weatherdiary.R;
 import android_project.voyager.com.weatherdiary.activities.MarkedPlaceForecastActivity;
 import android_project.voyager.com.weatherdiary.dao.MarkedPlacesWeatherDAO;
 import android_project.voyager.com.weatherdiary.interfaces.ForecastApi;
-import android_project.voyager.com.weatherdiary.interfaces.WeatherApi;
 import android_project.voyager.com.weatherdiary.models.MarkedPlace;
 import android_project.voyager.com.weatherdiary.models.Weather;
 import android_project.voyager.com.weatherdiary.utils.Constants;
@@ -75,11 +74,14 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
      * Initializers
      */
     private void initializeHelpers() {
-        mSharedPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        mSharedPrefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TAG,
+                Context.MODE_PRIVATE);
         mLatitude = Double.parseDouble(mSharedPrefs.getString(Constants.ARGS_LATITUDE,
                 Constants.DEFAULT_LAT_VALUE));
         mLongitude = Double.parseDouble( mSharedPrefs.getString(Constants.ARGS_LONGITUDE,
-                Constants.DEFAULT_LONG_VALUE) );
+                Constants.DEFAULT_LONG_VALUE));
+        Log.d("@@@MARK", "LAT: " + String.valueOf(mLatitude) + " LONG: "
+                + String.valueOf(mLongitude));
         mForecastApi = new ForecastApi(getActivity());
         mWeatherDAO = new MarkedPlacesWeatherDAO(getActivity());
     }
@@ -194,6 +196,8 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onMapClick(LatLng latLng) {
+        Log.d("@@@MARK NEW", "LAT: " + latLng.latitude + " LONG: "
+                + latLng.longitude);
         MarkerOptions mapMarker = new MarkerOptions().position(
                 new LatLng(latLng.latitude, latLng.longitude));
         getForecastDialog(mapMarker, latLng);
@@ -215,7 +219,7 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onProcessResult(ArrayList<Weather> weathers, LatLng latLng) {
-        mProgressDialogUpdate.hide();
+        mProgressDialogUpdate.dismiss();
 
         String nameOfPlace = weathers.get(0).nameOfPlace;
         String forecastTime = weathers.get(0).forecastTime;

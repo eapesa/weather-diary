@@ -2,7 +2,6 @@ package android_project.voyager.com.weatherdiary.interfaces;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import android_project.voyager.com.weatherdiary.helpers.Utilities;
 import android_project.voyager.com.weatherdiary.models.Weather;
 import android_project.voyager.com.weatherdiary.utils.Constants;
 
