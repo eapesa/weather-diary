@@ -14,16 +14,16 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import android_project.voyager.com.weatherdiary.R;
-import android_project.voyager.com.weatherdiary.activities.MainActivity;
+import android_project.voyager.com.weatherdiary.helpers.Utilities;
 import android_project.voyager.com.weatherdiary.interfaces.WeatherApi;
 import android_project.voyager.com.weatherdiary.models.Weather;
 import android_project.voyager.com.weatherdiary.utils.Constants;
@@ -46,6 +46,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
     private TextView mTextViewCloudiness;
     private TextView mTextViewWind;
     private TextView mTextViewTime;
+    private ImageView mWeatherStatus;
 
     private SharedPreferences mSharedPrefs;
     private SharedPreferences.Editor mSharedPrefsEditor;
@@ -73,7 +74,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        this.mContext = activity;
+        this.mContext = activity.getApplicationContext();
     }
 
     @Nullable
@@ -119,6 +120,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
                 (R.id.weatherdiary_home_wind_textview);
         mTextViewTime = (TextView) view.findViewById
                 (R.id.weatherdiary_home_forecasttime_textview);
+        mWeatherStatus = (ImageView) view.findViewById
+                (R.id.weatherdiary_home_weather_icon);
 
         mTextViewPlaceName.setText(placeName);
         mTextViewCelsius.setText(celsius);
@@ -212,6 +215,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
     @Override
     public void onStartOfQuery() {
         mProgressDialogUpdate.show();
+        mProgressDialogUpdate.setCancelable(false);
     }
 
     @Override
@@ -224,6 +228,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
         mSharedPrefsEditor.putString(Constants.ARGS_CLOUDINESS, weather.cloudiness);
         mSharedPrefsEditor.putString(Constants.ARGS_WINDSPEED, weather.windSpeed);
         mSharedPrefsEditor.putString(Constants.ARGS_FORECAST_TIME, weather.forecastTime);
+        mSharedPrefsEditor.putString(Constants.ARGS_ICON, weather.iconCode);
         mSharedPrefsEditor.commit();
 
         mTextViewPlaceName.setText(weather.nameOfPlace);
@@ -232,5 +237,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
         mTextViewCloudiness.setText(weather.cloudiness);
         mTextViewWind.setText(weather.windSpeed);
         mTextViewTime.setText(weather.forecastTime);
+        mWeatherStatus.setImageResource(Utilities.getImageResourceFromCode
+                (mContext, weather.iconCode));
     }
 }

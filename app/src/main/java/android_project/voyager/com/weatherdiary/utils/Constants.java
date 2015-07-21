@@ -29,6 +29,7 @@ public class Constants {
     public static final String ARGS_CLOUDINESS = "cloudiness";
     public static final String ARGS_WINDSPEED = "windspeed";
     public static final String ARGS_FORECAST_TIME = "time_of_forecast";
+    public static final String ARGS_ICON = "time_of_forecast";
     public static final String ARGS_MARKER = "map_marker";
 
     public static final String[] MONTHS = {"January", "February", "March", "April",

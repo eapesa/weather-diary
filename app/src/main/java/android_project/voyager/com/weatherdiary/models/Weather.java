@@ -18,4 +18,5 @@ public class Weather {
     public String minTemp;
     public String forecastDescription;
     public String forecastTime;
+    public String iconCode;
 }

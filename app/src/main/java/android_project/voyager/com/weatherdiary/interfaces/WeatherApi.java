@@ -81,6 +81,8 @@ public class WeatherApi {
         String currentDateTime = sdf.format(new Date());
         weather.forecastTime = "Forecast since " + currentDateTime;
 
+        weather.iconCode = json.getJSONArray("weather").getJSONObject(0).getString("icon");
+
         return weather;
     }
 
