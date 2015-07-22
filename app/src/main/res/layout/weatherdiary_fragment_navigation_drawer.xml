@@ -43,6 +43,7 @@
         android:layout_height="match_parent"
         tools:context=".NavigationDrawerFragment"/>
     <LinearLayout
+        android:id="@+id/weatherdiary_navigation_drawer_easter_layout"
         android:layout_weight="1.0"
         android:weightSum="1.0"
         android:orientation="horizontal"

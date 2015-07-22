@@ -2,6 +2,7 @@ package android_project.voyager.com.weatherdiary.fragments;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -12,18 +13,23 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import android_project.voyager.com.weatherdiary.R;
+import android_project.voyager.com.weatherdiary.activities.EasterActivity;
 
-public class NavigationDrawerFragment extends Fragment {
+public class NavigationDrawerFragment extends Fragment implements
+        LinearLayout.OnClickListener {
 
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
@@ -33,6 +39,7 @@ public class NavigationDrawerFragment extends Fragment {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private View mFragmentContainerView;
+    private LinearLayout mLinearLayout;
 
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
@@ -40,14 +47,13 @@ public class NavigationDrawerFragment extends Fragment {
 
     private AppCompatActivity appCompatActivity;
 
-    private CharSequence mTitle;
+    private int easterCount = 0;
 
     public NavigationDrawerFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        mTitle = getString(R.string.app_name);
         super.onCreate(savedInstanceState);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -71,7 +77,7 @@ public class NavigationDrawerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.weatherdiary_fragment_navigation_drawer,
-                container, false);
+                container);
         mDrawerListView = (ListView) rootView.findViewById(R.id.weatherdiary_navigation_drawer);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -89,6 +95,11 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.weatherdiary_navdrawer_section3_label),
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+
+        mLinearLayout = (LinearLayout) rootView.findViewById
+                (R.id.weatherdiary_navigation_drawer_easter_layout);
+        mLinearLayout.setOnClickListener(this);
+
         return rootView;
     }
 
@@ -215,18 +226,28 @@ public class NavigationDrawerFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void showGlobalContextActionBar() {
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setTitle(R.string.app_name);
-    }
-
     private ActionBar getActionBar() {
         return appCompatActivity.getSupportActionBar();
     }
+
     public static interface NavigationDrawerCallbacks {
         void onNavigationDrawerItemSelected(int position);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.weatherdiary_navigation_drawer_easter_layout:
+                if (easterCount == 3) {
+                    Log.d("@@@ EASTER", "Open the easter egg!!!");
+                    Intent intent = new Intent(getActivity().getApplicationContext(),
+                            EasterActivity.class);
+                    startActivity(intent);
+                } else {
+                    easterCount++;
+                    Log.d("@@@EASTER", "COUNT: " + easterCount);
+                }
+                break;
+        }
+    }
 }

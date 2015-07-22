@@ -24,4 +24,20 @@
     <string name="weatherdiary_markplaces_alert_managemarker_affbutton_label">Update</string>
     <string name="weatherdiary_markplaces_alert_managemarker_neutralbutton_label">Delete</string>
     <string name="weatherdiary_markplaces_alert_managemarker_negbutton_label">Cancel</string>
+
+    <string name="weatherdiary_easter_prologue">You are a ninja to discover this easter egg.
+        Actually, this page only serves one purpose and that is to acknowledge people who
+        helped me along the way. SOOOOOO cheesy... I know... :P But without those people...
+        I won\'t learn as much, produce this much and have something that is aesthetically
+        good not only in my eyes. So yes... enough with all the cheesiness. :D</string>
+    <string name="weatherdiary_easter_acknowledgment_one">First and foremost, to those android
+        people who imparted their great knowledge to me... Joice, Jade, Kim, Daryl, Xy, Miguel...
+        And to those who handled the Techfocus... I thank you all. I honestly learned a
+        lot. This project has brought joy and encouragement to me... #CHEESY</string>
+    <string name="weatherdiary_easter_acknowledgment_two">To my friends, Niqui and Robbie. For
+        giving comments on my poor aesthetics... I thank you very much. :)</string>
+    <string name="weatherdiary_easter_acknowledgment_three">Lastly, of course to MBK!!! For
+        our wonderful logo.</string>
+    <string name="weatherdiary_easter_finale">Thank you very much everyone. It is not that
+        much but I dedicate this page to you. :)</string>
 </resources>

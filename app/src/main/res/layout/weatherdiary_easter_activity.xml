@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp"
+    android:paddingRight="20dp"
+    android:paddingLeft="20dp">
+    <TextView
+        android:id="@+id/weatherdiary_easter_textview1"
+        android:text="@string/weatherdiary_easter_prologue"
+        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/weatherdiary_easter_textview2"
+        android:layout_below="@+id/weatherdiary_easter_textview1"
+        android:text="@string/weatherdiary_easter_acknowledgment_one"
+        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/weatherdiary_easter_textview3"
+        android:layout_below="@+id/weatherdiary_easter_textview2"
+        android:text="@string/weatherdiary_easter_acknowledgment_two"
+        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/weatherdiary_easter_textview4"
+        android:layout_below="@+id/weatherdiary_easter_textview3"
+        android:text="@string/weatherdiary_easter_acknowledgment_three"
+        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/weatherdiary_easter_textview5"
+        android:layout_below="@+id/weatherdiary_easter_textview4"
+        android:text="@string/weatherdiary_easter_finale"
+        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/weatherdiary_easter_back_button"
+        android:text="Back"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_below="@+id/weatherdiary_easter_textview5"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>
+
+<!--<ImageView-->
+<!--android:id="@+id/weatherdiary_easter_ninja"-->
+<!--android:src="@drawable/mbkcorp_ninja"-->
+<!--android:layout_below="@+id/weatherdiary_easter_textview5"-->
+<!--android:layout_alignParentBottom="true"-->
+<!--android:layout_toLeftOf="@+id/weatherdiary_easter_back_button"-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:layout_gravity="center" />-->

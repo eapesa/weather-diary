@@ -26,6 +26,9 @@
         <activity
             android:name=".activities.MarkedPlaceForecastActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.EasterActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.gms.version"

@@ -31,7 +31,6 @@ import android_project.voyager.com.weatherdiary.utils.Constants;
  */
 public class ForecastDiaryFragment extends Fragment implements ListView.OnItemClickListener{
 
-    private LinearLayout mThisLayout;
     private ListView mListView;
     private TextView mTextView;
     private MarkedPlacesAdapter mMarkedAdapter;
@@ -80,7 +79,6 @@ public class ForecastDiaryFragment extends Fragment implements ListView.OnItemCl
     }
 
     private void initializeViews(View view) {
-        mThisLayout = new LinearLayout(getActivity().getApplicationContext());
         mTextView = (TextView) view.findViewById(R.id.weatherdiary_forecastdiary_nodata_textview);
         mListView = (ListView) view.findViewById(R.id.weatherdiary_forecastdiary_listview);
         mListView.setOnItemClickListener(this);
