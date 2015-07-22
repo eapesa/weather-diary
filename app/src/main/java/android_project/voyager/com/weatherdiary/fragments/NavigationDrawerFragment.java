@@ -238,14 +238,11 @@ public class NavigationDrawerFragment extends Fragment implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.weatherdiary_navigation_drawer_easter_layout:
+                easterCount++;
                 if (easterCount == 3) {
-                    Log.d("@@@ EASTER", "Open the easter egg!!!");
                     Intent intent = new Intent(getActivity().getApplicationContext(),
                             EasterActivity.class);
                     startActivity(intent);
-                } else {
-                    easterCount++;
-                    Log.d("@@@EASTER", "COUNT: " + easterCount);
                 }
                 break;
         }
