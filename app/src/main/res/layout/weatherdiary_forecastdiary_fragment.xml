@@ -2,8 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <TextView
+        android:text="View weekly forecasts HERE of places marked on the map"
+        android:textStyle="italic"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/weatherdiary_forecastdiary_nodata_textview"
+        android:text="No marked places"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <ListView
         android:id="@+id/weatherdiary_forecastdiary_listview"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></ListView>
 </LinearLayout>

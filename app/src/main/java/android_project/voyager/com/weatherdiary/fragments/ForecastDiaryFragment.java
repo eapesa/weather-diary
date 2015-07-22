@@ -12,11 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import android_project.voyager.com.weatherdiary.R;
+import android_project.voyager.com.weatherdiary.activities.MainActivity;
 import android_project.voyager.com.weatherdiary.activities.MarkedPlaceForecastActivity;
 import android_project.voyager.com.weatherdiary.adapters.MarkedPlacesAdapter;
 import android_project.voyager.com.weatherdiary.dao.MarkedPlacesWeatherDAO;
@@ -28,20 +31,33 @@ import android_project.voyager.com.weatherdiary.utils.Constants;
  */
 public class ForecastDiaryFragment extends Fragment implements ListView.OnItemClickListener{
 
+    private LinearLayout mThisLayout;
     private ListView mListView;
+    private TextView mTextView;
     private MarkedPlacesAdapter mMarkedAdapter;
     private Context mContext;
     private MarkedPlacesWeatherDAO mWeatherDAO;
     private ArrayList<MarkedPlace> mMarkedPlaces;
 
-    public static ForecastDiaryFragment newInstance() {
+    private static final String ARG_SECTION_NUMBER = "section_number";
+
+    public ForecastDiaryFragment() {}
+
+    public static ForecastDiaryFragment newInstance(int sectionNumber) {
         ForecastDiaryFragment fragment = new ForecastDiaryFragment();
+
+        Bundle args = new Bundle();
+        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+        fragment.setArguments(args);
+
         return fragment;
     }
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.mContext = activity;
+        ((MainActivity) activity).getSectionTitle(
+                getArguments().getInt(ARG_SECTION_NUMBER));
     }
 
     @Nullable
@@ -64,14 +80,25 @@ public class ForecastDiaryFragment extends Fragment implements ListView.OnItemCl
     }
 
     private void initializeViews(View view) {
+        mThisLayout = new LinearLayout(getActivity().getApplicationContext());
+        mTextView = (TextView) view.findViewById(R.id.weatherdiary_forecastdiary_nodata_textview);
         mListView = (ListView) view.findViewById(R.id.weatherdiary_forecastdiary_listview);
         mListView.setOnItemClickListener(this);
     }
 
     private void loadData() {
         mMarkedPlaces = mWeatherDAO.getAllMarkedPlaces();
-        mMarkedAdapter = new MarkedPlacesAdapter(mContext, mMarkedPlaces);
-        mListView.setAdapter(mMarkedAdapter);
+
+        if (mMarkedPlaces.size() != 0) {
+            mListView.setVisibility(View.VISIBLE);
+            mTextView.setVisibility(View.GONE);
+
+            mMarkedAdapter = new MarkedPlacesAdapter(mContext, mMarkedPlaces);
+            mListView.setAdapter(mMarkedAdapter);
+        } else {
+            mListView.setVisibility(View.GONE);
+            mTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     /*

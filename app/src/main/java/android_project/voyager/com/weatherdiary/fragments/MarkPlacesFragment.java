@@ -1,5 +1,6 @@
 package android_project.voyager.com.weatherdiary.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 
 import android_project.voyager.com.weatherdiary.R;
+import android_project.voyager.com.weatherdiary.activities.MainActivity;
 import android_project.voyager.com.weatherdiary.activities.MarkedPlaceForecastActivity;
 import android_project.voyager.com.weatherdiary.dao.MarkedPlacesWeatherDAO;
 import android_project.voyager.com.weatherdiary.interfaces.ForecastApi;
@@ -51,9 +53,25 @@ public class MarkPlacesFragment extends Fragment implements OnMapReadyCallback,
     private double mLongitude;
     private Marker mCurrentMarker;
 
-    public static MarkPlacesFragment newInstance() {
+    private static final String ARG_SECTION_NUMBER = "section_number";
+
+    public MarkPlacesFragment() {}
+
+    public static MarkPlacesFragment newInstance(int sectionNumber) {
         MarkPlacesFragment fragment = new MarkPlacesFragment();
+
+        Bundle args = new Bundle();
+        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+        fragment.setArguments(args);
+
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        ((MainActivity) activity).getSectionTitle(
+                getArguments().getInt(ARG_SECTION_NUMBER));
     }
 
     @Nullable

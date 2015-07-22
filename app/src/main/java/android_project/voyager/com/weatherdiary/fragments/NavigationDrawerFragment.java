@@ -40,11 +40,14 @@ public class NavigationDrawerFragment extends Fragment {
 
     private AppCompatActivity appCompatActivity;
 
+    private CharSequence mTitle;
+
     public NavigationDrawerFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        mTitle = getString(R.string.app_name);
         super.onCreate(savedInstanceState);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -67,8 +70,9 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mDrawerListView = (ListView) inflater.inflate(
-                R.layout.fragment_navigation_drawer, container, false);
+        View rootView = inflater.inflate(R.layout.weatherdiary_fragment_navigation_drawer,
+                container, false);
+        mDrawerListView = (ListView) rootView.findViewById(R.id.weatherdiary_navigation_drawer);
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -76,8 +80,7 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
-//                getActionBar().getThemedContext(),
-                getActivity(),
+                getActivity().getApplicationContext(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
                 new String[]{
@@ -86,14 +89,14 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.weatherdiary_navdrawer_section3_label),
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
-        return mDrawerListView;
+        return rootView;
     }
 
     public boolean isDrawerOpen() {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
     }
 
-    public void setUp(int fragmentId, DrawerLayout drawerLayout) {
+    public void setUp(int fragmentId, final DrawerLayout drawerLayout) {
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
 
@@ -225,4 +228,5 @@ public class NavigationDrawerFragment extends Fragment {
     public static interface NavigationDrawerCallbacks {
         void onNavigationDrawerItemSelected(int position);
     }
+
 }

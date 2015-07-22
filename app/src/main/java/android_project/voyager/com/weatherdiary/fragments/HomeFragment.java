@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import android_project.voyager.com.weatherdiary.R;
+import android_project.voyager.com.weatherdiary.activities.MainActivity;
 import android_project.voyager.com.weatherdiary.helpers.Utilities;
 import android_project.voyager.com.weatherdiary.interfaces.WeatherApi;
 import android_project.voyager.com.weatherdiary.models.Weather;
@@ -63,11 +64,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
     private String mProvider;
     private ProgressDialog mProgressDialogUpdate;
     private LocationManager mLocationManager;
-
     private WeatherApi weatherApi;
 
-    public static HomeFragment newInstance() {
+    private static final String ARG_SECTION_NUMBER = "section_number";
+
+    public HomeFragment() {}
+
+    public static HomeFragment newInstance(int sectionNumber) {
         HomeFragment fragment = new HomeFragment();
+
+        Bundle args = new Bundle();
+        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+        fragment.setArguments(args);
 
         return fragment;
     }
@@ -76,6 +84,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Loca
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.mContext = activity.getApplicationContext();
+        ((MainActivity) activity).getSectionTitle(
+                getArguments().getInt(ARG_SECTION_NUMBER));
     }
 
     @Nullable
