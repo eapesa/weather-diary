@@ -26,17 +26,10 @@ public class EasterActivity extends Activity implements View.OnClickListener {
     }
 
     @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(EasterActivity.this, MainActivity.class);
-        startActivity(intent);
-        super.onBackPressed();
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.weatherdiary_easter_back_button:
-                onBackPressed();
+                super.finish();
                 break;
         }
     }

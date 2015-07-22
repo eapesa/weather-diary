@@ -54,6 +54,7 @@ public class NavigationDrawerFragment extends Fragment implements
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        easterCount = 0;
         super.onCreate(savedInstanceState);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -126,6 +127,7 @@ public class NavigationDrawerFragment extends Fragment implements
         ) {
             @Override
             public void onDrawerClosed(View drawerView) {
+                easterCount = 0;
                 super.onDrawerClosed(drawerView);
                 if (!isAdded()) {
                     return;
